@@ -1,5 +1,4 @@
 import 'package:collectioneer/services/account_service.dart';
-import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
