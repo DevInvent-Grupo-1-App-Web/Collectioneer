@@ -1,3 +1,4 @@
+import 'package:collectioneer/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 class AppBottomBar extends StatefulWidget {
@@ -21,7 +22,7 @@ class _AppBottomBarState extends State<AppBottomBar> {
                 ? const Icon(Icons.home)
                 : const Icon(Icons.home_outlined),
             onPressed: () => {
-              Navigator.pushNamed(context, '/home'),
+              Navigator.pushNamed(context, AppRoutes.home),
             },
             iconSize: 30.0,
           ),
@@ -30,7 +31,7 @@ class _AppBottomBarState extends State<AppBottomBar> {
                 ? const Icon(Icons.notifications)
                 : const Icon(Icons.notifications_outlined),
             onPressed: () => {
-              Navigator.pushNamed(context, '/notifications'),
+              Navigator.pushNamed(context, AppRoutes.notifications),
             },
             iconSize: 30.0,
           ),
@@ -39,7 +40,7 @@ class _AppBottomBarState extends State<AppBottomBar> {
                 ? const Icon(Icons.group)
                 : const Icon(Icons.group_outlined),
             onPressed: () => {
-              Navigator.pushNamed(context, '/communities'),
+              Navigator.pushNamed(context, AppRoutes.communities),
             },
             iconSize: 30.0,
           ),
@@ -47,7 +48,7 @@ class _AppBottomBarState extends State<AppBottomBar> {
             icon: widget.selectedIndex == 3
                 ? const Icon(Icons.person)
                 : const Icon(Icons.person_outline),
-            onPressed: () => Navigator.pushNamed(context, '/account'),
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.account),
             iconSize: 30.0,
           ),
         ],

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:collectioneer/routes/app_routes.dart';
 import 'package:collectioneer/services/account_service.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +16,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool isPasswordVisible = false;
 
-  void _login() async {
+  Future<bool> _login() async {
     final String username = _usernameController.text;
     final String password = _passwordController.text;
 
     try {
       await AccountService().login(username, password);
+      return true;
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -27,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       }
+      return false;
     }
   }
 
@@ -61,7 +66,15 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: _login,
+              onPressed: () async {
+                try {
+                  if (await _login()) {
+                    Navigator.pushNamed(context, AppRoutes.home);
+                  }
+                } catch (e) {
+                  log('Login failed: $e');
+                }
+              },
               child: const Text('Login'),
             )
           ],
