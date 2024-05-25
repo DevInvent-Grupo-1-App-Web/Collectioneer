@@ -1,6 +1,7 @@
 import 'package:collectioneer/ui/screens/account/profile_screen.dart';
 import 'package:collectioneer/ui/screens/communications/notifications_screen.dart';
 import 'package:collectioneer/ui/screens/communities_list_screen.dart';
+import 'package:collectioneer/ui/screens/community/create_community_screen.dart';
 import 'package:collectioneer/ui/screens/community/community_feed_screen.dart';
 import 'package:collectioneer/ui/screens/startup/change_password_screen.dart';
 import 'package:collectioneer/ui/screens/startup/forgot_password_screen.dart';
@@ -19,6 +20,7 @@ final Map<String, Widget Function(BuildContext)> routes = {
   AppRoutes.notifications: (context) => const NotificationsScreen(),
   AppRoutes.communities: (context) => const CommunitiesListScreen(),
   AppRoutes.account: (context) => const ProfileScreen(),
+  AppRoutes.community: (context) => const CreateCommunityScreen(),
 };
 
 class AppRoutes {
@@ -31,4 +33,5 @@ class AppRoutes {
   static const String notifications = '/notifications';
   static const String communities = '/communities';
   static const String account = '/account';
+  static const String community = '/add-community';
 }

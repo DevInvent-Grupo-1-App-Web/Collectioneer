@@ -18,6 +18,7 @@ class CommunitiesListScreen extends StatelessWidget {
         bottomNavigationBar: const AppBottomBar(selectedIndex: 2),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            Navigator.pushNamed(context, '/add-community');
             log("Add community");
           },
           child: const Icon(Icons.add),

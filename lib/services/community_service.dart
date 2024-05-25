@@ -28,4 +28,25 @@ class CommunityService extends BaseService {
     final List<dynamic> body = jsonDecode(response.body);
     return body.map((dynamic item) => Community.fromJson(item)).toList();
   }
+
+  Future<void> createCommunity(String name, String description) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/new-community'),
+      headers: <String, String>{
+        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'name': name,
+        'description': description,
+        'userId': UserPreferences().getUserId(),
+      }),
+    );
+    if (response.statusCode != 201) {
+     throw Exception('Failed to create community: ${response.body}');
+    }
+    final body = jsonDecode(response.body);
+    final communityId = body['id'];
+    UserPreferences().setLatestActiveCommunity(communityId);
+  }
 }
