@@ -18,7 +18,7 @@ class CommunitiesListScreen extends StatelessWidget {
         bottomNavigationBar: const AppBottomBar(selectedIndex: 2),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/add-community');
+            Navigator.pushNamed(context, '/add_community');
             log("Add community");
           },
           child: const Icon(Icons.add),
@@ -35,14 +35,44 @@ class CommunityList extends StatefulWidget {
 
 class _CommunityListState extends State<CommunityList> {
   List _communities = [];
+  List _userCommunities = [];
   final _communityService = CommunityService();
 
   void _loadCommunities() async {
     final communities = await _communityService.getCommunities();
+    final userCommunities = await _communityService.getUserCommunities();
     setState(() {
       _communities = communities;
+      _userCommunities = userCommunities;
     });
   }
+
+  bool _isUserInCommunity(String communityId) {
+  for (var community in _userCommunities) {
+    if (community.id.toString() == communityId) {
+      return true;
+    }
+  }
+  return false;
+}
+
+  void _joinCommunity(String communityId) async {
+    try {
+      await _communityService.joinCommunity(communityId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Joined community'),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to join community: $e'),
+        ),
+      );
+    }
+  }
+
 
   @override
   void initState() {
@@ -65,7 +95,11 @@ class _CommunityListState extends State<CommunityList> {
               Align(
                 alignment: Alignment.centerRight,
                 child: FilledButton(
-                  onPressed: () {},
+                  onPressed: _isUserInCommunity(_communities[index].id.toString())
+                      ? null
+                      : () {
+                          _joinCommunity(_communities[index].id.toString());
+                        },
                   child: const Text('Join'),
                 ),
               )

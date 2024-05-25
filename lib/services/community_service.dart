@@ -49,4 +49,63 @@ class CommunityService extends BaseService {
     final communityId = body['id'];
     UserPreferences().setLatestActiveCommunity(communityId);
   }
+
+
+
+  Future<void> joinCommunity(String communityId) async {
+  // Obtén las comunidades del usuario
+  final userCommunitiesResponse = await http.get(
+    Uri.parse('$baseUrl/communities/${UserPreferences().getUserId()}'),
+    headers: <String, String>{
+      'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+    },
+  );
+
+  if (userCommunitiesResponse.statusCode != 200) {
+    throw Exception('Failed to get user communities: ${userCommunitiesResponse.body}');
+  }
+
+  final List<dynamic> userCommunities = jsonDecode(userCommunitiesResponse.body);
+
+  // Verifica si el usuario ya está en la comunidad
+  for (var community in userCommunities) {
+    if (community['id'].toString() == communityId) {
+      throw Exception('User is already in this community');
+    }
+  }
+
+  // Si el usuario no está en la comunidad, únete a la comunidad
+  final response = await http.post(
+    Uri.parse('$baseUrl/join-community'),
+    headers: <String, String>{
+      'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode({
+      'communityId': communityId,
+      'userId': UserPreferences().getUserId(),
+    }),
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception('Failed to join community: ${response.body}');
+  }
+}
+
+  Future<List<Community>> getUserCommunities() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/communities/${UserPreferences().getUserId()}'),
+      headers: <String, String>{
+        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to get user communities: ${response.body}');
+    }
+
+    final List<dynamic> body = jsonDecode(response.body);
+    return body.map((dynamic item) => Community.fromJson(item)).toList();
+  }
+  
 }
