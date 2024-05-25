@@ -12,7 +12,8 @@ class ChangePasswordScreen extends StatefulWidget {
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _recoveryTokenController = TextEditingController();
+  final TextEditingController _recoveryTokenController =
+      TextEditingController();
 
   Future<bool> _changePassword() async {
     final String username = _usernameController.text;
@@ -20,7 +21,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     final String recoveryToken = _recoveryTokenController.text;
 
     try {
-      await AccountService().changePassword(username, newPassword, recoveryToken);
+      await AccountService()
+          .changePassword(username, newPassword, recoveryToken);
       return true;
     } catch (e) {
       if (mounted) {
@@ -76,7 +78,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 FilledButton(
                   onPressed: () async {
                     if (await _changePassword()) {
-                      Navigator.pushNamed(context, AppRoutes.login);
+                      navigateTo(AppRoutes.login);
                     }
                   },
                   child: const Text('Change Password'),
@@ -90,13 +92,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               child: Text(
                 'Back to Login',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
               ),
-              )
+            )
           ],
         ),
       ),
     );
+  }
+
+  void navigateTo(String route) {
+    Navigator.pushNamed(context, route);
   }
 }

@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () async {
                     try {
                       if (await _login()) {
-                        Navigator.pushNamed(context, AppRoutes.home);
+                        navigateTo(AppRoutes.home);
                       }
                     } catch (e) {
                       log('Inicio de sesión fallido: $e');
@@ -117,5 +117,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void navigateTo(String route) {
+    Navigator.pushNamed(context, route);
   }
 }
