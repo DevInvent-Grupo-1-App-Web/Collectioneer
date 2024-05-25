@@ -45,7 +45,7 @@ class UserPreferences {
   }
 
   void addUserCommunity(int communityId) {
-    _userCommunities!.add(communityId);
+    _userCommunities.add(communityId);
   }
 
   List<int> getUserCommunities() {

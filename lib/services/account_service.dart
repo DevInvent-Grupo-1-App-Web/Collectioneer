@@ -1,10 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:collectioneer/services/base_service.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class AccountService extends BaseService {
-
   static final AccountService _singleton = AccountService._internal();
 
   factory AccountService() {
@@ -18,15 +18,15 @@ class AccountService extends BaseService {
     String password,
   ) async {
     final response = await http.post(
-    Uri.parse('$baseUrl/login'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'username': username,
-      'password': password,
-    }),
-  );
+      Uri.parse('$baseUrl/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'username': username,
+        'password': password,
+      }),
+    );
 
     if (response.statusCode != 200) {
       throw Exception(response.body);
@@ -42,12 +42,15 @@ class AccountService extends BaseService {
       String email, String name, String password, String username) async {
     final response = await http.post(
       Uri.parse('$baseUrl/register-user'),
-      body: {
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
         'email': email,
         'name': name,
         'password': password,
         'username': username,
-      },
+      }),
     );
 
     if (response.statusCode != 200) {
@@ -63,12 +66,16 @@ class AccountService extends BaseService {
   Future<void> forgotPassword(String email) async {
     final response = await http.post(
       Uri.parse('$baseUrl/forgot-password'),
-      body: {
-        'email': email,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
       },
+      body: jsonEncode({
+        'email': email,
+      }),
     );
 
     if (response.statusCode != 200) {
+      log(response.body);
       throw Exception('Failed to send recovery email');
     }
   }
@@ -77,11 +84,14 @@ class AccountService extends BaseService {
       String username, String newPassword, String recoveryToken) async {
     final response = await http.post(
       Uri.parse('$baseUrl/change-password'),
-      body: {
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
         'username': username,
         'newPassword': newPassword,
         'recoveryToken': recoveryToken,
-      },
+      }),
     );
 
     if (response.statusCode != 200) {

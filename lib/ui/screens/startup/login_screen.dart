@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:collectioneer/routes/app_routes.dart';
 import 'package:collectioneer/services/account_service.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to login: $e'),
+            content: Text('Inicio de sesión fallido: $e'),
           ),
         );
       }
@@ -38,55 +37,85 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const Text('Login'),
-            TextFormField(
-              controller: _usernameController,
-              decoration: const InputDecoration(
-                labelText: 'Username',
-              ),
+            Text(
+              'Iniciar sesión',
+              style: Theme.of(context).textTheme.displaySmall,
             ),
-            TextFormField(
-              controller: _passwordController,
-              obscureText: !isPasswordVisible, // Use isPasswordVisible here
-              decoration: InputDecoration(
-                labelText: 'Password',
-                suffixIcon: IconButton(
-                  icon: Icon(isPasswordVisible
-                      ? Icons.visibility
-                      : Icons.visibility_off),
-                  onPressed: () {
-                    setState(() {
-                      isPasswordVisible = !isPasswordVisible;
-                    });
-                  },
+            Column(
+              children: [
+                TextFormField(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(
+                      labelText: 'Nombre de usuario', filled: true),
                 ),
+                const SizedBox(height: 36.0),
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: !isPasswordVisible, // Use isPasswordVisible here
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    filled: true,
+                    suffixIcon: IconButton(
+                      icon: Icon(isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          isPasswordVisible = !isPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRoutes.forgotPassword);
+                    },
+                    child: Text(
+                      '¿Olvidaste tu contraseña?',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 36.0),
+                FilledButton(
+                  onPressed: () async {
+                    try {
+                      if (await _login()) {
+                        Navigator.pushNamed(context, AppRoutes.home);
+                      }
+                    } catch (e) {
+                      log('Inicio de sesión fallido: $e');
+                    }
+                  },
+                  child: const Text('Iniciar sesión'),
+                ),
+              ],
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.register);
+              },
+              child: Text(
+                'Crea una nueva cuenta.',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  if (await _login()) {
-                    Navigator.pushNamed(context, AppRoutes.home);
-                  }
-                } catch (e) {
-                  log('Login failed: $e');
-                }
-              },
-              child: const Text('Login'),
-            )
           ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 }
