@@ -8,9 +8,9 @@ class UserPreferences {
   UserPreferences._internal();
 
   String? _userToken = 'no_token';
-  int? _latestActiveCommunity = 0;
-  List<int>? _userRoles = [];
-  List<int>? _userCommunities = [];
+  int? _latestActiveCommunity;
+  List<int> _userRoles = [];
+  List<int> _userCommunities = [];
 
   void setUserToken (String token) {
     _userToken = token;
@@ -32,12 +32,12 @@ class UserPreferences {
     _userRoles = roles;
   }
 
-  List<int>? getUserRoles() {
+  List<int> getUserRoles() {
     return _userRoles;
   }
 
   void addUserRole(int roleId) {
-    _userRoles!.add(roleId);
+    _userRoles.add(roleId);
   }
 
   void setUserCommunities(List<int> communities) {
@@ -45,10 +45,14 @@ class UserPreferences {
   }
 
   void addUserCommunity(int communityId) {
-    _userCommunities!.add(communityId);
+    _userCommunities.add(communityId);
   }
 
-  List<int>? getUserCommunities() {
+  List<int> getUserCommunities() {
     return _userCommunities;
+  }
+
+  bool hasUserToken() {
+    return _userToken != 'no_token';
   }
 }
