@@ -7,7 +7,8 @@ class UserPreferences {
 
   UserPreferences._internal();
 
-  String? _userToken = 'no_token';
+  String? _userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwiZXhwIjoxNzE5MjMyMzg3LCJpc3MiOiJsb2NhbGhvc3QiLCJhdWQiOiJsb2NhbGhvc3QifQ.iMPH769rRiP2jT558uGd_XSPFfYDMkSihGKXir_cQYE';
+  int? _userId = 1;
   int? _latestActiveCommunity;
   List<int> _userRoles = [];
   List<int> _userCommunities = [];
@@ -54,5 +55,21 @@ class UserPreferences {
 
   bool hasUserToken() {
     return _userToken != 'no_token';
+  }
+
+  int getUserId() {
+    return _userId!;
+  }
+
+  void setUserId(int userId) {
+    _userId = userId;
+  }
+
+  void clearUserPreferences() {
+    _userToken = 'no_token';
+    _userId = 0;
+    _latestActiveCommunity = 0;
+    _userRoles = [];
+    _userCommunities = [];
   }
 }
