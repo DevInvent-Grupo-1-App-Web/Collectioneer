@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:collectioneer/models/user.dart';
 import 'package:collectioneer/services/base_service.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -97,5 +98,23 @@ class AccountService extends BaseService {
     if (response.statusCode != 200) {
       throw Exception('Failed to change password');
     }
+  }
+
+  Future<User> getUserData(
+    int id,
+  ) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/user/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(response.body);
+    }
+
+    final body = jsonDecode(response.body);
+    return User.fromJson(jsonDecode(response.body));
   }
 }
