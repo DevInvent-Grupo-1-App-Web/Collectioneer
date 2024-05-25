@@ -57,8 +57,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         onPressed: () async {
                           try {
                             if (await _sendRecoveryEmail()) {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.changePassword);
+                              navigateTo(AppRoutes.changePassword);
                             }
                           } catch (e) {
                             log('Envío de correo de recuperación fallido: $e');
@@ -79,5 +78,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                   )
                 ])));
+  }
+
+  void navigateTo(String route) {
+    Navigator.pushNamed(context, route);
   }
 }

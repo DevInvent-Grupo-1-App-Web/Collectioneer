@@ -114,7 +114,6 @@ class AccountService extends BaseService {
       throw Exception(response.body);
     }
 
-    final body = jsonDecode(response.body);
     return User.fromJson(jsonDecode(response.body));
   }
 }

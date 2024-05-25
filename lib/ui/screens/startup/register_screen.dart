@@ -95,7 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     try {
                       if (await _register()) {
                         if (mounted) {
-                          Navigator.pushNamed(context, AppRoutes.home);
+                          navigateTo(AppRoutes.home);
                         }
                       }
                     } catch (e) {
@@ -122,5 +122,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  void navigateTo(String route) {
+    Navigator.pushNamed(context, route);
   }
 }
