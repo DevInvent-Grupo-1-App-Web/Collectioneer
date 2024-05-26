@@ -148,16 +148,14 @@ class _CommunityFeedListState extends State<CommunityFeedList> {
                               children: [
                                 Text(
                                   _feed[index].title,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Flexible(
                                   child: Text(
                                     _feed[index].description,
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                     overflow: TextOverflow.fade,
                                   ),
                                 ),
