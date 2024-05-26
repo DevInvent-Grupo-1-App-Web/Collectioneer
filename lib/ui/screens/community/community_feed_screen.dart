@@ -28,6 +28,7 @@ class CommunityFeedScreen extends StatelessWidget {
         bottomNavigationBar: const AppBottomBar(selectedIndex: 0),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            Navigator.pushNamed(context, "/create-collectible");
             log("Add feed item");
           },
           child: const Icon(Icons.add),
@@ -123,7 +124,7 @@ class _CommunityFeedListState extends State<CommunityFeedList> {
 
   @override
   Widget build(BuildContext context) {
-    return _feed == null || _feed.isEmpty
+    return _feed.isEmpty
         ? Center(child: CircularProgressIndicator())
         : ListView.builder(
             itemCount: _feed.length,
