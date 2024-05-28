@@ -72,4 +72,12 @@ class UserPreferences {
     _userRoles = [];
     _userCommunities = [];
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'user_token': _userToken,
+      'user_id': _userId,
+      'latest_active_community': _latestActiveCommunity
+    };
+  }
 }
