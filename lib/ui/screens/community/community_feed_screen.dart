@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:collectioneer/models/feed_item.dart';
+import 'package:collectioneer/routes/app_routes.dart';
 import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
+import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
 import 'package:flutter/material.dart';
 
 class CommunityFeedScreen extends StatelessWidget {
@@ -28,8 +30,10 @@ class CommunityFeedScreen extends StatelessWidget {
         bottomNavigationBar: const AppBottomBar(selectedIndex: 0),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.pushNamed(context, "/create-collectible");
-            log("Add feed item");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CommunityFeedScreen()));
           },
           child: const Icon(Icons.add),
         ));
@@ -129,45 +133,73 @@ class _CommunityFeedListState extends State<CommunityFeedList> {
         : ListView.builder(
             itemCount: _feed.length,
             itemBuilder: (context, index) {
-              return ConstrainedBox(
-                constraints:
-                    const BoxConstraints(minHeight: 120, maxHeight: 120),
-                child: Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.network(
-                        "https://picsum.photos/120",
-                        fit: BoxFit.cover,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _feed[index].title,
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    _feed[index].description,
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
-                                    overflow: TextOverflow.fade,
-                                  ),
-                                ),
-                              ]),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              return CollectibleFeedView(sourceItem: _feed[index]);
             },
           );
+  }
+}
+
+class CollectibleFeedView extends StatelessWidget {
+  const CollectibleFeedView({super.key, required this.sourceItem});
+  final FeedItem sourceItem;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ViewCollectibleScreen()));
+        },
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 120, maxHeight: 120),
+          child: Card(
+            clipBehavior: Clip.antiAlias,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.network(
+                  "https://picsum.photos/120",
+                  fit: BoxFit.cover,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            sourceItem.title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Flexible(
+                            child: Text(
+                              sourceItem.description,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface),
+                              overflow: TextOverflow.fade,
+                            ),
+                          ),
+                        ]),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }

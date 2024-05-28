@@ -3,6 +3,7 @@ import 'package:collectioneer/ui/screens/communications/notifications_screen.dar
 import 'package:collectioneer/ui/screens/communities_list_screen.dart';
 import 'package:collectioneer/ui/screens/community/community_feed_screen.dart';
 import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
+import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
 import 'package:collectioneer/ui/screens/startup/change_password_screen.dart';
 import 'package:collectioneer/ui/screens/startup/forgot_password_screen.dart';
 import 'package:collectioneer/ui/screens/startup/login_screen.dart';
@@ -21,6 +22,7 @@ final Map<String, Widget Function(BuildContext)> routes = {
   AppRoutes.communities: (context) => const CommunitiesListScreen(),
   AppRoutes.account: (context) => const ProfileScreen(),
   AppRoutes.createCollectible: (context) => const CreateCollectibleScreen(),
+  AppRoutes.viewCollectible: (context) => const ViewCollectibleScreen(),
 };
 
 class AppRoutes {
@@ -34,4 +36,5 @@ class AppRoutes {
   static const String communities = '/communities';
   static const String account = '/account';
   static const String createCollectible = '/create-collectible';
+  static const String viewCollectible = '/view-collectible';
 }
