@@ -108,4 +108,28 @@ class CommunityService extends BaseService {
     return body.map((dynamic item) => Community.fromJson(item)).toList();
   }
   
+  Future<List<Community>> searchCommunities(String query) async {
+  if (query.isEmpty) {
+    throw Exception('Search term cannot be null or empty');
+  }
+
+  try {
+    final response = await http.get(
+      Uri.parse('$baseUrl/search/communities?SearchTerm=${Uri.encodeComponent(query)}'),
+      headers: <String, String>{
+        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to search communities. Status code: ${response.statusCode}, Response: ${response.body}');
+    }
+
+    final List<dynamic> body = jsonDecode(response.body);
+    return body.map((dynamic item) => Community.fromJson(item)).toList();
+  } catch (e) {
+    throw Exception('Failed to search communities due to: $e');
+  }
+}
 }

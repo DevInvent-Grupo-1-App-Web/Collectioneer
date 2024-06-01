@@ -36,81 +36,106 @@ class CommunityList extends StatefulWidget {
 class _CommunityListState extends State<CommunityList> {
   List _communities = [];
   List _userCommunities = [];
+  List _filteredCommunities = [];
   final _communityService = CommunityService();
+  final _searchController = TextEditingController();
 
-  void _loadCommunities() async {
-    final communities = await _communityService.getCommunities();
+  void _loadCommunities(String query) async {
+    final communities = await _communityService.searchCommunities(query);
     final userCommunities = await _communityService.getUserCommunities();
     setState(() {
       _communities = communities;
       _userCommunities = userCommunities;
+      _filteredCommunities = _communities;
     });
   }
 
   bool _isUserInCommunity(String communityId) {
-  for (var community in _userCommunities) {
-    if (community.id.toString() == communityId) {
-      return true;
+    for (var community in _userCommunities) {
+      if (community.id.toString() == communityId) {
+        return true;
+      }
     }
+    return false;
   }
-  return false;
-}
 
   void _joinCommunity(String communityId) async {
-  try {
-    await _communityService.joinCommunity(communityId);
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Joined community'),
-        ),
-      );
+    try {
+      await _communityService.joinCommunity(communityId);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Joined community'),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to join community: $e'),
+          ),
+        );
+      }
     }
-  } catch (e) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to join community: $e'),
-        ),
-      );
-    }
+  }
+void _filterCommunities() {
+  final query = _searchController.text;
+  if (query.isNotEmpty) {
+    _loadCommunities(query);
   }
 }
 
-
-  @override
-  void initState() {
-    super.initState();
-    _loadCommunities();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: _communities.length,
-      itemBuilder: (context, index) {
-        return Card(
-          child: Column(
-            children: [
-              ListTile(
-                title: Text(_communities[index].name),
-                subtitle: Text(_communities[index].description),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: FilledButton(
-                  onPressed: _isUserInCommunity(_communities[index].id.toString())
-                      ? null
-                      : () {
-                          _joinCommunity(_communities[index].id.toString());
-                        },
-                  child: const Text('Join'),
-                ),
-              )
-            ],
+@override
+void initState() {
+  super.initState();
+  _searchController.addListener(_filterCommunities);
+}
+@override
+Widget build(BuildContext context) {
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: TextField(
+          controller: _searchController,
+          decoration: const InputDecoration(
+            labelText: 'Search',
+            suffixIcon: Icon(Icons.search),
           ),
-        );
-      },
-    );
-  }
+        ),
+      ),
+      Expanded(
+        child: _filteredCommunities.isEmpty
+            ? Center(child: Text('No se encontraron comunidades'))
+            : ListView.builder(
+                itemCount: _filteredCommunities.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(_filteredCommunities[index].name),
+                          subtitle: Text(_filteredCommunities[index].description),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: FilledButton(
+                            onPressed: _isUserInCommunity(_filteredCommunities[index].id.toString())
+                                ? null
+                                : () {
+                                    _joinCommunity(_filteredCommunities[index].id.toString());
+                                  },
+                            child: const Text('Join'),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+      ),
+    ],
+  );
+}
 }
