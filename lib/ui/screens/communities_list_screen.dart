@@ -9,7 +9,7 @@ class CommunitiesListScreen extends StatelessWidget {
   const CommunitiesListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {  
     return Scaffold(
         appBar: const AppTopBar(title: "Communities"),
         body: const Center(
@@ -18,7 +18,7 @@ class CommunitiesListScreen extends StatelessWidget {
         bottomNavigationBar: const AppBottomBar(selectedIndex: 2),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/add_community');
+            Navigator.pushNamed(context, '/add-community');
             log("Add community");
           },
           child: const Icon(Icons.add),
@@ -57,14 +57,17 @@ class _CommunityListState extends State<CommunityList> {
 }
 
   void _joinCommunity(String communityId) async {
-    try {
-      await _communityService.joinCommunity(communityId);
+  try {
+    await _communityService.joinCommunity(communityId);
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Joined community'),
         ),
       );
-    } catch (e) {
+    }
+  } catch (e) {
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to join community: $e'),
@@ -72,6 +75,7 @@ class _CommunityListState extends State<CommunityList> {
       );
     }
   }
+}
 
 
   @override
