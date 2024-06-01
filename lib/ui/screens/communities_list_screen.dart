@@ -107,7 +107,7 @@ Widget build(BuildContext context) {
       ),
       Expanded(
         child: _filteredCommunities.isEmpty
-            ? Center(child: Text('No se encontraron comunidades'))
+            ? const Center(child: Text('No se encontraron comunidades'))
             : ListView.builder(
                 itemCount: _filteredCommunities.length,
                 itemBuilder: (context, index) {
