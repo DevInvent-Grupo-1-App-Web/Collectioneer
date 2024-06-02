@@ -1,32 +1,37 @@
 import 'dart:developer';
+
 import 'package:collectioneer/routes/app_routes.dart';
 import 'package:collectioneer/services/account_service.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   bool isPasswordVisible = false;
 
-  Future<bool> _login() async {
+  Future<bool> _register() async {
     final String username = _usernameController.text;
+    final String name = _nameController.text;
     final String password = _passwordController.text;
+    final String email = _emailController.text;
 
     try {
-      await AccountService().login(username, password);
+      await AccountService().register(email, name, password, username);
       return true;
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Inicio de sesión fallido: $e'),
+            content: Text('Failed to register: $e'),
           ),
         );
       }
@@ -43,11 +48,17 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              'Iniciar sesión',
+              'Crear cuenta',
               style: Theme.of(context).textTheme.displaySmall,
             ),
             Column(
               children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration:
+                      const InputDecoration(labelText: 'Nombres', filled: true),
+                ),
+                const SizedBox(height: 36.0),
                 TextFormField(
                   controller: _usernameController,
                   decoration: const InputDecoration(
@@ -55,10 +66,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 36.0),
                 TextFormField(
+                  controller: _emailController,
+                  decoration:
+                      const InputDecoration(labelText: 'Correo', filled: true),
+                ),
+                const SizedBox(height: 36.0),
+                TextFormField(
                   controller: _passwordController,
                   obscureText: !isPasswordVisible, // Use isPasswordVisible here
                   decoration: InputDecoration(
-                    labelText: 'Contraseña',
+                    labelText: 'Password',
                     filled: true,
                     suffixIcon: IconButton(
                       icon: Icon(isPasswordVisible
@@ -72,44 +89,32 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 8.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, AppRoutes.forgotPassword);
-                    },
-                    child: Text(
-                      '¿Olvidaste tu contraseña?',
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 36.0),
                 FilledButton(
                   onPressed: () async {
                     try {
-                      if (await _login()) {
-                        navigateTo(AppRoutes.home);
+                      if (await _register()) {
+                        if (mounted) {
+                          navigateTo(AppRoutes.home);
+                        }
                       }
                     } catch (e) {
-                      log('Inicio de sesión fallido: $e');
+                      log('Registro fallido: $e');
                     }
                   },
-                  child: const Text('Iniciar sesión'),
+                  child: const Text('Registrarse'),
                 ),
               ],
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.register);
+                Navigator.pushNamed(context, AppRoutes.login);
               },
               child: Text(
-                'Crea una nueva cuenta.',
+                'Inicia sesión en una cuenta existente',
                 style: Theme.of(context)
                     .textTheme
-                    .labelMedium
+                    .labelSmall
                     ?.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
             ),
