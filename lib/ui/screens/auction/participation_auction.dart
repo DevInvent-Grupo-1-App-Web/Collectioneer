@@ -8,9 +8,9 @@ class AuctionParticipationScreen extends StatefulWidget {
       _AuctionParticipationScreenState();
 }
 
-class _AuctionParticipationScreenState
-    extends State<AuctionParticipationScreen> {
+class _AuctionParticipationScreenState extends State<AuctionParticipationScreen> {
   String price = "S/. 4 750.00";
+  final TextEditingController _offerController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +38,10 @@ class _AuctionParticipationScreenState
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(0),
                 child: Image.asset(
-                        'assets/images/sample_image.png',
-                        width: 150,
-                        height: 150,
-                      ),
+                  'assets/images/sample_image.png',
+                  width: 150,
+                  height: 150,
+                ),
               ),
             ),
             SizedBox(height: 16),
@@ -148,11 +148,27 @@ class _AuctionParticipationScreenState
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Oferta Realizada"),
-          content: Text("Has realizado una oferta de $price."),
+          title: Text("Realizar Oferta"),
+          content: TextField(
+            controller: _offerController,
+            decoration: InputDecoration(
+              labelText: 'Ingrese su oferta',
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_offerController.text.isNotEmpty) {
+                  setState(() {
+                    price = "S/. " + _offerController.text;
+                  });
+                }
                 Navigator.of(context).pop();
               },
               child: Text("Aceptar"),
@@ -160,6 +176,8 @@ class _AuctionParticipationScreenState
           ],
         );
       },
-    );
+    ).then((_) {
+      _offerController.clear(); // Clear the text field after dialog is closed
+    });
   }
 }

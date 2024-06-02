@@ -1,4 +1,5 @@
 import 'package:collectioneer/routes/app_routes.dart';
+import 'package:collectioneer/ui/screens/auction/participation_auction.dart';
 import 'package:collectioneer/ui/screens/startup/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,10 +25,7 @@ class MainApp extends StatelessWidget {
         primaryColor: colorScheme.primary,
         textTheme: GoogleFonts.soraTextTheme(),
       ),
-      home: const Scaffold(
-        body: Center(
-          child: SplashScreen(),
-        ),
+      home: AuctionParticipationScreen(
       ),
       debugShowCheckedModeBanner: false,
       routes: routes,
