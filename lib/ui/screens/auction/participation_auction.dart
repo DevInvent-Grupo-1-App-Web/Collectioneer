@@ -143,41 +143,40 @@ class _AuctionParticipationScreenState extends State<AuctionParticipationScreen>
     );
   }
 
-  void _showOfferDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Realizar Oferta"),
-          content: TextField(
-            controller: _offerController,
-            decoration: InputDecoration(
-              labelText: 'Ingrese su oferta',
-            ),
+void _showOfferDialog() {
+  showDialog(
+    context: context, // This is correct
+    builder: (BuildContext dialogContext) { // Use this context
+      return AlertDialog(
+        title: Text("Realizar Oferta"),
+        content: TextField(
+          controller: _offerController,
+          decoration: InputDecoration(
+            labelText: 'Ingrese su oferta',
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Cancelar"),
-            ),
-            TextButton(
-              onPressed: () {
-                if (_offerController.text.isNotEmpty) {
-                  setState(() {
-                    price = "S/. " + _offerController.text;
-                  });
-                }
-                Navigator.of(context).pop();
-              },
-              child: Text("Aceptar"),
-            ),
-          ],
-        );
-      },
-    ).then((_) {
-      _offerController.clear(); // Clear the text field after dialog is closed
-    });
-  }
-}
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop(); // Use dialogContext
+            },
+            child: Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () {
+              if (_offerController.text.isNotEmpty) {
+                setState(() {
+                  price = "S/. " + _offerController.text;
+                });
+              }
+              Navigator.of(dialogContext).pop(); // Use dialogContext
+            },
+            child: Text("Aceptar"),
+          ),
+        ],
+      );
+    },
+  ).then((_) {
+    _offerController.clear(); // Clear the text field after dialog is closed
+  });
+}}
