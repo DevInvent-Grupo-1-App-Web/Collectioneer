@@ -8,6 +8,8 @@ import 'package:collectioneer/ui/screens/startup/login_screen.dart';
 import 'package:collectioneer/ui/screens/startup/register_screen.dart';
 import 'package:collectioneer/ui/screens/startup/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:collectioneer/ui/screens/auction/convert_an_aucttion_screen.dart';
+import 'package:collectioneer/ui/screens/auction/participation_auction.dart';
 
 final Map<String, Widget Function(BuildContext)> routes = {
   AppRoutes.splash: (context) => const SplashScreen(),
@@ -19,6 +21,8 @@ final Map<String, Widget Function(BuildContext)> routes = {
   AppRoutes.notifications: (context) => const NotificationsScreen(),
   AppRoutes.communities: (context) => const CommunitiesListScreen(),
   AppRoutes.account: (context) => const ProfileScreen(),
+  AppRoutes.collectible: (context) => const ConvertAnAuctionScreen(),
+  AppRoutes.auction: (context) => const AuctionParticipationScreen(),
 };
 
 class AppRoutes {
@@ -31,4 +35,6 @@ class AppRoutes {
   static const String notifications = '/notifications';
   static const String communities = '/communities';
   static const String account = '/account';
+  static const String collectible = '/collectible';
+  static const String auction = '/auction';
 }
