@@ -65,6 +65,7 @@ class UserPreferences {
     _userId = userId;
   }
 
+
   void clearUserPreferences() {
     _userToken = 'no_token';
     _userId = 0;
