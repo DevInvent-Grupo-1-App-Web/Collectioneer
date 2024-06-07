@@ -27,6 +27,8 @@ class CommunityService extends BaseService {
       throw Exception(response.body);
     }
 
+    log("Communities found: ${response.body}");
+
     final List<dynamic> body = jsonDecode(response.body);
     return body.map((dynamic item) => Community.fromJson(item)).toList();
   }
