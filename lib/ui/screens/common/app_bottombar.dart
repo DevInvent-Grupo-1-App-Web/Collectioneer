@@ -1,4 +1,3 @@
-import 'package:collectioneer/routes/app_routes.dart';
 import 'package:collectioneer/ui/screens/account/profile_screen.dart';
 import 'package:collectioneer/ui/screens/communications/notifications_screen.dart';
 import 'package:collectioneer/ui/screens/communities_list_screen.dart';

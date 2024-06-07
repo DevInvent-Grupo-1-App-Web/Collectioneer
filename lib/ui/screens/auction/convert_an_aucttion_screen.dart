@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ConvertAnAuctionScreen extends StatefulWidget {
-  const ConvertAnAuctionScreen({Key? key}) : super(key: key);
+  const ConvertAnAuctionScreen({super.key});
 
   @override
   _ConvertAnAuctionScreenState createState() =>

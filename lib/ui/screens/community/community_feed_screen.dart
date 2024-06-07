@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:collectioneer/models/feed_item.dart';
-import 'package:collectioneer/routes/app_routes.dart';
 import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
