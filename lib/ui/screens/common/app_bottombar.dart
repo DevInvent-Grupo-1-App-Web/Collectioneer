@@ -1,4 +1,8 @@
 import 'package:collectioneer/routes/app_routes.dart';
+import 'package:collectioneer/ui/screens/account/profile_screen.dart';
+import 'package:collectioneer/ui/screens/communications/notifications_screen.dart';
+import 'package:collectioneer/ui/screens/communities_list_screen.dart';
+import 'package:collectioneer/ui/screens/community/community_feed_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppBottomBar extends StatefulWidget {
@@ -22,7 +26,10 @@ class _AppBottomBarState extends State<AppBottomBar> {
                 ? const Icon(Icons.home)
                 : const Icon(Icons.home_outlined),
             onPressed: () => {
-              Navigator.pushNamed(context, AppRoutes.home),
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CommunityFeedScreen()))
             },
             iconSize: 30.0,
           ),
@@ -31,7 +38,10 @@ class _AppBottomBarState extends State<AppBottomBar> {
                 ? const Icon(Icons.notifications)
                 : const Icon(Icons.notifications_outlined),
             onPressed: () => {
-              Navigator.pushNamed(context, AppRoutes.notifications),
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const NotificationsScreen()))
             },
             iconSize: 30.0,
           ),
@@ -40,7 +50,11 @@ class _AppBottomBarState extends State<AppBottomBar> {
                 ? const Icon(Icons.group)
                 : const Icon(Icons.group_outlined),
             onPressed: () => {
-              Navigator.pushNamed(context, AppRoutes.communities),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CommunitiesListScreen()),
+              )
             },
             iconSize: 30.0,
           ),
@@ -48,7 +62,12 @@ class _AppBottomBarState extends State<AppBottomBar> {
             icon: widget.selectedIndex == 3
                 ? const Icon(Icons.person)
                 : const Icon(Icons.person_outline),
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.account),
+            onPressed: () => {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileScreen()))
+            },
             iconSize: 30.0,
           ),
         ],

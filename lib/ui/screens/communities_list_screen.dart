@@ -22,7 +22,8 @@ class CommunitiesListScreen extends StatelessWidget {
             log("Add community");
           },
           child: const Icon(Icons.add),
-        ));
+        )
+      );
   }
 }
 

@@ -5,10 +5,12 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.allowBack = false,
+    this.onBack,
   });
 
   final String title;
   final bool allowBack;
+  final void Function(BuildContext)? onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,15 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title),
       automaticallyImplyLeading: allowBack,
       leading: allowBack
-          ? BackButton(onPressed: () => Navigator.pop(context))
+          ? BackButton(
+              onPressed: () {
+                if (onBack != null) {
+                  onBack!(context);
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+            )
           : null,
     );
   }
