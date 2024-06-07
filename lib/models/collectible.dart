@@ -1,17 +1,15 @@
-import 'dart:ffi';
-
 class Collectible {
   final int id;
   final String name;
   final int ownerId;
-  final Float value;
+  final double value;
   final String description;
   final bool isLinkedToProcess;
   final int? auctionId;
   final int? saleId;
   final int? exchangeId;
   final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   Collectible({
     required this.id,
@@ -24,19 +22,19 @@ class Collectible {
     this.saleId,
     this.exchangeId,
     required this.createdAt,
-    required this.updatedAt,
+    this.updatedAt,
   });
 
   Collectible.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        ownerId = json['owner_id'],
-        value = json['value'],
+        ownerId = json['ownerId'], // Changed from 'owner_id'
+        value = (json['value'] as num).toDouble(),
         description = json['description'],
-        isLinkedToProcess = json['is_linked_to_process'],
-        auctionId = json['auction_id'],
-        saleId = json['sale_id'],
-        exchangeId = json['exchange_id'],
-        createdAt = DateTime.parse(json['created_at']),
-        updatedAt = DateTime.parse(json['updated_at']);
+        isLinkedToProcess = json['isLinkedToProcess'], // Changed from 'is_linked_to_process'
+        auctionId = json['auctionId'], // Changed from 'auction_id'
+        saleId = json['saleId'], // Changed from 'sale_id'
+        exchangeId = json['exchangeId'], // Changed from 'exchange_id'
+        createdAt = DateTime.parse(json['createdAt']), // Changed from 'created_at'
+        updatedAt = json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null; // Changed from 'updated_at'
 }

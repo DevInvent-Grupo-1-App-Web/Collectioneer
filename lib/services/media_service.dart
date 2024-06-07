@@ -42,4 +42,22 @@ class MediaService extends BaseService {
       throw Exception('Failed to upload media: ${response.body}');
     }
   }
+
+  Future<List<String>> getCollectibleMedia(int collectibleId) async {
+      final response = await http.get(
+        Uri.parse('$baseUrl/media?ElementId=$collectibleId&ElementType=collectible'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load media: ${response.body}');
+      }
+
+      final List<dynamic> media = jsonDecode(response.body);
+      final List<String> mediaList = media.map((item) => item['mediaName'] as String).toList();
+      return mediaList;
+  }
 }

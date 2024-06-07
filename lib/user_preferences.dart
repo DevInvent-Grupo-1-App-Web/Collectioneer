@@ -12,6 +12,7 @@ class UserPreferences {
   int? _latestActiveCommunity = 1;
   List<int> _userRoles = [1];
   List<int> _userCommunities = [1];
+  int _collectibleId = 1;
 
   void setUserToken (String token) {
     _userToken = token;
@@ -63,6 +64,14 @@ class UserPreferences {
 
   void setUserId(int userId) {
     _userId = userId;
+  }
+
+  void setCollectibleId(int collectibleId) {
+    _collectibleId = collectibleId;
+  }
+
+  int getCollectibleId() {
+    return _collectibleId;
   }
 
 

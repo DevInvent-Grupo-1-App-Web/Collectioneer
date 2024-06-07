@@ -5,7 +5,9 @@ import 'package:collectioneer/routes/app_routes.dart';
 import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
+import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
 import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
+import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 
 class CommunityFeedScreen extends StatelessWidget {
@@ -33,7 +35,7 @@ class CommunityFeedScreen extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const CommunityFeedScreen()));
+                    builder: (context) => const CreateCollectibleScreen()));
           },
           child: const Icon(Icons.add),
         ));
@@ -129,7 +131,7 @@ class _CommunityFeedListState extends State<CommunityFeedList> {
   @override
   Widget build(BuildContext context) {
     return _feed.isEmpty
-        ? Center(child: CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator())
         : ListView.builder(
             itemCount: _feed.length,
             itemBuilder: (context, index) {
@@ -147,6 +149,7 @@ class CollectibleFeedView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
+          UserPreferences().setCollectibleId(sourceItem.id);
           Navigator.push(
               context,
               MaterialPageRoute(
