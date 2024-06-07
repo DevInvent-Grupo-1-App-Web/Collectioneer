@@ -11,7 +11,7 @@ import 'package:collectioneer/ui/screens/startup/login_screen.dart';
 import 'package:collectioneer/ui/screens/startup/register_screen.dart';
 import 'package:collectioneer/ui/screens/startup/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:collectioneer/ui/screens/auction/convert_an_aucttion_screen.dart';
+import 'package:collectioneer/ui/screens/auction/convert_an_auction_screen.dart';
 import 'package:collectioneer/ui/screens/auction/participation_auction.dart';
 
 final Map<String, Widget Function(BuildContext)> routes = {
