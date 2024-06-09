@@ -112,14 +112,18 @@ class CommunityService extends BaseService {
     return body.map((dynamic item) => Community.fromJson(item)).toList();
   }
   
-  Future<List<Community>> searchCommunities(String query) async {
+Future<List<Community>> searchCommunities(String query) async {
+  Uri uri;
+  // Si el término de búsqueda está vacío, ajusta la URI para obtener todas las comunidades
   if (query.isEmpty) {
-    throw Exception('Search term cannot be null or empty');
+    uri = Uri.parse('$baseUrl/communities');
+  } else {
+    uri = Uri.parse('$baseUrl/search/communities?SearchTerm=${Uri.encodeComponent(query)}');
   }
 
   try {
     final response = await http.get(
-      Uri.parse('$baseUrl/search/communities?SearchTerm=${Uri.encodeComponent(query)}'),
+      uri,
       headers: <String, String>{
         'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
         'Content-Type': 'application/json',
