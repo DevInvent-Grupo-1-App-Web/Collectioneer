@@ -41,7 +41,8 @@ class _CommunityListState extends State<CommunityList> {
   final _communityService = CommunityService();
   final _searchController = TextEditingController();
 
-  void _loadCommunities(String query) async {
+
+   void _loadCommunities([String query = '']) async {
     final communities = await _communityService.searchCommunities(query);
     final userCommunities = await _communityService.getUserCommunities();
     setState(() {
@@ -87,11 +88,13 @@ void _filterCommunities() {
   }
 }
 
-@override
-void initState() {
-  super.initState();
-  _searchController.addListener(_filterCommunities);
-}
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_filterCommunities);
+    _loadCommunities(); // Carga todas las comunidades al inicio
+  }
+
 @override
 Widget build(BuildContext context) {
   return Column(
