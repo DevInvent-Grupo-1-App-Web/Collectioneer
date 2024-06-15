@@ -113,6 +113,15 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
                 ],
               ),
             ),
+            floatingActionButton: collectible?.ownerId ==
+                    UserPreferences().getUserId()
+                ? FloatingActionButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/edit-collectible');
+                    },
+                    child: const Icon(Icons.edit),
+                  )
+                : null,
           );
         }
       },

@@ -9,7 +9,7 @@ class UserPreferences {
 
   String? _userToken;
   int? _userId;
-  int? _latestActiveCommunity ;
+  int? _latestActiveCommunity;
   List<int> _userRoles = [];
   List<int> _userCommunities = [];
   int _collectibleId = 0;
