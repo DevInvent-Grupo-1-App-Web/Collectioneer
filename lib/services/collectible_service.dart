@@ -16,7 +16,7 @@ class CollectibleService extends BaseService {
 
   CollectibleService._internal();
 
-  Future<bool> createCollectible(CollectibleRequest request) async {
+  Future<Collectible> createCollectible(CollectibleRequest request) async {
     final response = await http.post(
       Uri.parse('$baseUrl/collectibles'),
       headers: <String, String>{
@@ -32,12 +32,12 @@ class CollectibleService extends BaseService {
         'value': request.value,
       }),
     );
-
-    if (response.statusCode != 201) {
-      throw Exception(response.body);
+    
+    if (response.statusCode > 299) {
+      throw Exception('Failed to create collectible: ${response.body}');
     }
 
-    return true;
+    return Collectible.fromJson(jsonDecode(response.body));
   }
 
   Future<Collectible> getCollectible(int collectibleId) async {
