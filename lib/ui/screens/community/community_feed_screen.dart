@@ -1,5 +1,6 @@
 import 'package:collectioneer/models/feed_item.dart';
 import 'package:collectioneer/services/community_service.dart';
+import 'package:collectioneer/services/media_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
@@ -159,9 +160,20 @@ class CollectibleFeedView extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.network(
-                  "https://picsum.photos/120",
-                  fit: BoxFit.cover,
+                FutureBuilder<List<String>>(
+                  future: MediaService().getCollectibleMedia(sourceItem.id),
+                  builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator(); // or some placeholder
+                    } else {
+                      if (snapshot.hasError){
+                        return Image.network("https://picsum.photos/120");
+                      }
+                      else {
+                        return Image.network(snapshot.data![0]);
+                      }
+                    }
+                  },
                 ),
                 Expanded(
                   child: Padding(
