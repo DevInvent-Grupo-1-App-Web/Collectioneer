@@ -1,7 +1,7 @@
 import 'package:collectioneer/services/media_service.dart';
 import 'package:flutter/material.dart';
 
-class AsyncMediaDisplay extends StatelessWidget {
+class AsyncMediaDisplay extends StatefulWidget {
   const AsyncMediaDisplay(
       {super.key,
       required this.collectibleId,
@@ -12,19 +12,24 @@ class AsyncMediaDisplay extends StatelessWidget {
   final double width;
 
   @override
+  State<AsyncMediaDisplay> createState() => _AsyncMediaDisplayState();
+}
+
+class _AsyncMediaDisplayState extends State<AsyncMediaDisplay> {
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: MediaService().getCollectibleMedia(collectibleId),
+      future: MediaService().getCollectibleMedia(widget.collectibleId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SizedBox(
-            height: height,
+            height: widget.height,
             child: const Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot.hasError) {
           return SizedBox(
-            height: height,
-            width: width,
+            height: widget.height,
+            width: widget.width,
             child: const Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -37,8 +42,8 @@ class AsyncMediaDisplay extends StatelessWidget {
           final collectibleMedia = snapshot.data;
           if (collectibleMedia == null || collectibleMedia.isEmpty) {
             return SizedBox(
-                height: height,
-                width: width,
+                height: widget.height,
+                width: widget.width,
                 child: const Center(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -58,15 +63,15 @@ class AsyncMediaDisplay extends StatelessWidget {
 
   Widget mediaReel(List<String> mediaURLs) {
     return SizedBox(
-      height: height,
+      height: widget.height,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: mediaURLs.length,
         itemBuilder: (context, index) {
           return Image.network(
             mediaURLs[index],
-            height: height,
-            width: width,
+            height: widget.height,
+            width: widget.width,
             fit: BoxFit.cover,
           );
         },
