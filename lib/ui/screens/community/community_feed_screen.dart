@@ -17,13 +17,19 @@ class CommunityFeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const AppTopBar(title: "Feed"),
+        appBar: AppTopBar(title: "Feed", actions: [
+          IconButton(
+            icon: const Icon(Icons.search), 
+            onPressed: () {
+              log("Search button pressed");
+            },
+          )
+        ],
+        ),
         body: const Padding(
           padding: EdgeInsets.all(8.0),
           child: Column(
             children: [
-              FeedSearchBar(),
-              SizedBox(height: 24),
               FeedFilterChips(),
               SizedBox(height: 16),
               Expanded(child: CommunityFeedList()),
