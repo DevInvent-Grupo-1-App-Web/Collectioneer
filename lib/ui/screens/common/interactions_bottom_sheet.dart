@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CommentsBottomSheet extends StatefulWidget {
-  final List<Map<String, String>> comments;
-  final List<Map<String, dynamic>> reviews;
 
   const CommentsBottomSheet({
-    super.key,
-    required this.comments,
-    required this.reviews,
+    super.key
   });
 
   @override
@@ -72,8 +68,8 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
               });
             },
             children: [
-              CommentsList(comments: widget.comments),
-              ReviewsList(reviews: widget.reviews),
+              CommentsList(),
+              ReviewsList(),
             ],
           ),
         ),
@@ -211,11 +207,13 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
     final String commentText = _commentController.text.trim();
     if (commentText.isNotEmpty) {
       setState(() {
-        widget.comments.add({
+        /*
+        comments.add({
           'text': commentText,
           'image': 'URL_de_la_imagen',
           'username': username,
         });
+         */
         _commentController.clear();
       });
       FocusScope.of(context).unfocus(); // Ocultar el teclado
@@ -226,12 +224,14 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
     final String reviewText = _reviewController.text.trim();
     if (reviewText.isNotEmpty && _rating > 0) {
       setState(() {
+        /*
         widget.reviews.add({
           'text': reviewText,
           'image': 'URL_de_la_imagen',
           'username': username,
           'rating': _rating,
         });
+         */
         _reviewController.clear();
         _rating = 0; // Restablecer la calificación después de agregar la reseña
       });
@@ -240,10 +240,16 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
   }
 }
 
-class CommentsList extends StatelessWidget {
-  final List<Map<String, String>> comments;
+class CommentsList extends StatefulWidget {
 
-  const CommentsList({super.key, required this.comments});
+  const CommentsList({super.key});
+
+  @override
+  State<CommentsList> createState() => _CommentsListState();
+}
+
+class _CommentsListState extends State<CommentsList> {
+  List<Map<String, String>> comments = List.empty();
 
   @override
   Widget build(BuildContext context) {
@@ -287,10 +293,16 @@ class CommentsList extends StatelessWidget {
   }
 }
 
-class ReviewsList extends StatelessWidget {
-  final List<Map<String, dynamic>> reviews;
+class ReviewsList extends StatefulWidget {
 
-  const ReviewsList({super.key, required this.reviews});
+  const ReviewsList({super.key});
+
+  @override
+  State<ReviewsList> createState() => _ReviewsListState();
+}
+
+class _ReviewsListState extends State<ReviewsList> {
+  List<Map<String, dynamic>> reviews = List.empty();
 
   @override
   Widget build(BuildContext context) {
