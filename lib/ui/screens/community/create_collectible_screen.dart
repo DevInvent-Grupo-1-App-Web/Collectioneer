@@ -10,6 +10,7 @@ import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 
 class CreateCollectibleScreen extends StatefulWidget {
   const CreateCollectibleScreen({super.key});
@@ -63,11 +64,12 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
     return collectible;
   }
 
-  Future postMedia(File imageFile, int collectibleId) async {
+  Future postMedia(
+      File imageFile, int collectibleId, String collectibleName) async {
     final bytes = await imageFile.readAsBytes();
     final base64Image = base64Encode(bytes);
-    await MediaService().uploadMedia("collectible_image", base64Image,
-        "image/jpeg", collectibleId, "collectible");
+    await MediaService().uploadMedia(collectibleName, base64Image, "image/jpeg",
+        collectibleId, "collectible");
   }
 
   @override
@@ -91,11 +93,10 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Mark this function as async
           var collectible = await postCollectible();
-          postMedia(_imageFile!, collectible.id);
+          String filename = path.basename(_imageFile!.path);
+          postMedia(_imageFile!, collectible.id, filename);
           if (mounted) {
-            // Check if the widget is still in the tree
             Navigator.pop(context);
           }
           log("Save collectible");

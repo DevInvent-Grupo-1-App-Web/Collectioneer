@@ -15,7 +15,6 @@ class MediaService extends BaseService {
 
   MediaService._internal();
 
-  // Función para cargar los medios
   Future<void> uploadMedia(String mediaName, String imageData, String contentType, int attachedToId, String attachedToType) async {
     final MediaPostRequest mediaPostRequest = MediaPostRequest(
       mediaName: mediaName,
