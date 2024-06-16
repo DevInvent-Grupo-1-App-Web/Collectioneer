@@ -6,6 +6,7 @@ import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/services/media_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
+import 'package:collectioneer/ui/screens/common/async_media_display.dart';
 import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
 import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
 import 'package:collectioneer/user_preferences.dart';
@@ -17,17 +18,19 @@ class CommunityFeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppTopBar(title: "Feed", actions: [
-          IconButton(
-            icon: const Icon(Icons.search), 
-            onPressed: () {
-              log("Search button pressed");
-            },
-          )
-        ],
+        appBar: AppTopBar(
+          title: "Feed",
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                log("Search button pressed");
+              },
+            )
+          ],
         ),
         body: const Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(top: 16, left: 16, right: 16),
           child: Column(
             children: [
               FeedFilterChips(),
@@ -155,20 +158,61 @@ class CollectibleFeedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          UserPreferences().setCollectibleId(sourceItem.id);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ViewCollectibleScreen()));
-        },
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 120, maxHeight: 120),
-          child: Card(
-            clipBehavior: Clip.antiAlias,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+      onTap: () {
+        UserPreferences().setCollectibleId(sourceItem.id);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ViewCollectibleScreen()));
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("username",
+                          style: Theme.of(context).textTheme.labelSmall),
+                      Text(
+                        sourceItem.title,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ]),
+              ),
+              AsyncMediaDisplay(
+                collectibleId: sourceItem.id,
+                height: 360,
+                width: 360,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(sourceItem.description,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                    overflow: TextOverflow.fade),
+              ),
+              const SizedBox(height: 32)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/*
+
                 FutureBuilder<List<Media>>(
                   future: MediaService().getCollectibleMedia(sourceItem.id),
                   builder: (BuildContext context, AsyncSnapshot<List<Media>> snapshot) {
@@ -224,9 +268,4 @@ class CollectibleFeedView extends StatelessWidget {
                         ]),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ));
-  }
-}
+*/
