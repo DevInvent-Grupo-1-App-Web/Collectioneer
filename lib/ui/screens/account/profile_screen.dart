@@ -1,5 +1,4 @@
 import 'package:collectioneer/models/user.dart';
-import 'package:collectioneer/routes/app_routes.dart';
 import 'package:collectioneer/services/account_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';

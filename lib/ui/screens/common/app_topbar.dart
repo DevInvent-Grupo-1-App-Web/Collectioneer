@@ -6,12 +6,13 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     this.allowBack = false,
     this.onBack,
+    this.actions,
   });
 
   final String title;
   final bool allowBack;
   final void Function(BuildContext)? onBack;
-
+  final List<Widget>? actions;
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -28,6 +29,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
               },
             )
           : null,
+      actions: actions,
     );
   }
 

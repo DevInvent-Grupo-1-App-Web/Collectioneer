@@ -1,11 +1,16 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:collectioneer/models/collectible.dart';
 import 'package:collectioneer/services/collectible_service.dart';
+import 'package:collectioneer/services/media_service.dart';
 import 'package:collectioneer/services/models/collectible_request.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
+import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 
 class CreateCollectibleScreen extends StatefulWidget {
   const CreateCollectibleScreen({super.key});
@@ -18,6 +23,11 @@ class CreateCollectibleScreen extends StatefulWidget {
 class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
   final GlobalKey<_CreateCollectibleFormState> _formKey = GlobalKey();
   final CollectibleService _collectibleService = CollectibleService();
+  File? _imageFile;
+
+  void onImagePicked(File pickedImage) {
+    _imageFile = pickedImage;
+  }
 
   void showExitModal(BuildContext context) {
     showDialog(
@@ -46,10 +56,20 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
     );
   }
 
-  Future<bool> postCollectible() async {
+  Future<Collectible> postCollectible() async {
     final CollectibleRequest request =
         _formKey.currentState!.getCollectibleRequest();
-    return await _collectibleService.createCollectible(request);
+    var collectible = await _collectibleService.createCollectible(request);
+    UserPreferences().setCollectibleId(collectible.id);
+    return collectible;
+  }
+
+  Future postMedia(
+      File imageFile, int collectibleId, String collectibleName) async {
+    final bytes = await imageFile.readAsBytes();
+    final base64Image = base64Encode(bytes);
+    await MediaService().uploadMedia(collectibleName, base64Image, "image/jpeg",
+        collectibleId, "collectible");
   }
 
   @override
@@ -65,15 +85,20 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CreateCollectibleForm(key: _formKey),
+              CreateCollectibleForm(
+                  key: _formKey, onImagePicked: onImagePicked),
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          postCollectible();
-          Navigator.pop(context);
+        onPressed: () async {
+          var collectible = await postCollectible();
+          String filename = path.basename(_imageFile!.path);
+          postMedia(_imageFile!, collectible.id, filename);
+          if (mounted) {
+            Navigator.pop(context);
+          }
           log("Save collectible");
         },
         child: const Icon(Icons.save),
@@ -83,7 +108,8 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
 }
 
 class CreateCollectibleForm extends StatefulWidget {
-  const CreateCollectibleForm({super.key});
+  const CreateCollectibleForm({super.key, required this.onImagePicked});
+  final Function(File) onImagePicked;
 
   @override
   State<CreateCollectibleForm> createState() => _CreateCollectibleFormState();
@@ -106,7 +132,7 @@ class _CreateCollectibleFormState extends State<CreateCollectibleForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const CollectiblePictureSelector(),
+        CollectiblePictureSelector(onImagePicked: widget.onImagePicked),
         TextField(
           controller: _titleController,
           decoration: const InputDecoration(
@@ -140,7 +166,8 @@ class _CreateCollectibleFormState extends State<CreateCollectibleForm> {
 }
 
 class CollectiblePictureSelector extends StatefulWidget {
-  const CollectiblePictureSelector({super.key});
+  const CollectiblePictureSelector({super.key, required this.onImagePicked});
+  final Function(File) onImagePicked;
 
   @override
   State<CollectiblePictureSelector> createState() =>
@@ -158,6 +185,7 @@ class _CollectiblePictureSelectorState
       setState(() {
         _image = image;
       });
+      widget.onImagePicked(File(image.path));
     }
   }
 
@@ -167,6 +195,7 @@ class _CollectiblePictureSelectorState
       setState(() {
         _image = image;
       });
+      widget.onImagePicked(File(image.path));
     }
   }
 

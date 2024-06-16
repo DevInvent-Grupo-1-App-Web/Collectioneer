@@ -1,10 +1,12 @@
-import 'dart:developer';
-
+import 'package:collectioneer/ui/screens/auction/view_auction_screen.dart';
+import 'package:collectioneer/ui/screens/common/async_media_display.dart';
+import 'package:collectioneer/ui/screens/common/auction_bottom_sheet.dart';
+import 'package:flutter/material.dart';
 import 'package:collectioneer/models/collectible.dart';
 import 'package:collectioneer/services/collectible_service.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
-import 'package:flutter/material.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:collectioneer/user_preferences.dart';
+import 'package:collectioneer/ui/screens/common/interactions_bottom_sheet.dart';
 
 class ViewCollectibleScreen extends StatefulWidget {
   const ViewCollectibleScreen({super.key});
@@ -14,67 +16,160 @@ class ViewCollectibleScreen extends StatefulWidget {
 }
 
 class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
-  final int collectibleId = 3;
-  Collectible? collectible;
+  final int collectibleId = UserPreferences().getCollectibleId();
+  late Collectible collectible;
   bool isLoading = true;
 
   @override
-  void initState() {
-    super.initState();
-    CollectibleService().getCollectible(collectibleId).then((value) {
-      setState(() {
-        collectible = value;
-        isLoading = false;
-      });
-    }).catchError((error) {
-      log('Error: $error');
-    });
+  Widget build(BuildContext context) {
+    double height = 300;
+    double width = MediaQuery.of(context).size.width - 64;
+
+    return FutureBuilder(
+      future: CollectibleService().getCollectible(collectibleId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+              appBar: AppTopBar(title: "Loading...", allowBack: true),
+              body: Center(
+                child: CircularProgressIndicator(),
+              ));
+        } else if (snapshot.hasError) {
+          return Text('Error on displaying: ${snapshot.error}');
+        } else {
+          if (snapshot.data == null) {
+            _exitInError("No data found.", context);
+          }
+          collectible = snapshot.data!;
+          return Scaffold(
+              appBar: const AppTopBar(
+                title: "Collectible info",
+                allowBack: true,
+              ),
+              body: Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: ListView(
+                    children: [
+                      AsyncMediaDisplay(
+                          collectibleId: collectibleId,
+                          height: height,
+                          width: width),
+                      const SizedBox(height: 16),
+                      CollectibleInfo(
+                          collectible: collectible,
+                          onCommentTap: _showBottomSheet)
+                    ],
+                  )),
+              floatingActionButton: collectible.ownerId ==
+                      UserPreferences().getUserId()
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ViewAuctionScreen(collectibleId: collectibleId),
+                          ),
+                        );
+                      },
+                      child: const Icon(Icons.edit),
+                    )
+                  : null,
+              bottomSheet: _buildBottomSheet());
+        }
+      },
+    );
   }
+
+  Widget? _buildBottomSheet() {
+    if (collectible.auctionId != null) {
+      return AuctionBottomSheet(auctionId: collectible.auctionId!);
+    }
+    return null;
+  }
+
+  void _exitInError(String error, BuildContext context) {
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(error),
+      duration: const Duration(seconds: 2),
+    ));
+  }
+
+  void _showBottomSheet(BuildContext context) async {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double maxHeight = screenHeight * 0.8;
+
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return Container(
+            constraints: BoxConstraints(maxHeight: maxHeight),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: const CommentsBottomSheet());
+      },
+    );
+  }
+}
+
+class CollectibleInfo extends StatelessWidget {
+  const CollectibleInfo(
+      {super.key, required this.collectible, required this.onCommentTap});
+  final Collectible collectible;
+  final Function onCommentTap;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppTopBar(
-        title: collectible?.name ?? 'Collectible',
-        allowBack: true,
-      ),
-      body: isLoading
-          ? const Skeletonizer(
-            child: Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(collectible.name, style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          collectible.ownerId.toString(),
+          style: Theme.of(context)
+              .textTheme
+              .labelSmall
+              ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
               children: [
-                ListTile(
-                  title: Text('Name'),
-                  subtitle: Text('Loading...'),
+                Icon(Icons.star, color: Theme.of(context).colorScheme.primary),
+                const SizedBox(width: 8),
+                Text(
+                  "4.8",
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-                ListTile(
-                  title: Text('Description'),
-                  subtitle: Text('Loading...'),
-                ),
-                ListTile(
-                  title: Text('Value'),
-                  subtitle: Text('Loading...'),
-                ),
+                Text(" (126)",
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant)),
               ],
-            
             ),
-            )
-          : ListView(
+            Row(
               children: [
-                ListTile(
-                  title: const Text('Name'),
-                  subtitle: Text(collectible?.name ?? ''),
-                ),
-                ListTile(
-                  title: const Text('Description'),
-                  subtitle: Text(collectible?.description ?? ''),
-                ),
-                ListTile(
-                  title: const Text('Value'),
-                  subtitle: Text(collectible?.value.toString() ?? ''),
-                ),
+                IconButton(
+                    onPressed: () {
+                      onCommentTap(context);
+                    },
+                    icon: Icon(Icons.comment,
+                        color: Theme.of(context).colorScheme.primary))
               ],
-            )
-
+            ),
+          ],
+        ),
+        const Divider(
+          height: 24,
+        ),
+        Text("Descripción", style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        Text(collectible.description,
+            style: Theme.of(context).textTheme.bodyMedium),
+      ],
     );
   }
 }

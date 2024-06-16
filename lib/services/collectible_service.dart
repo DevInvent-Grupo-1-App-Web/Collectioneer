@@ -16,7 +16,7 @@ class CollectibleService extends BaseService {
 
   CollectibleService._internal();
 
-  Future<bool> createCollectible(CollectibleRequest request) async {
+  Future<Collectible> createCollectible(CollectibleRequest request) async {
     final response = await http.post(
       Uri.parse('$baseUrl/collectibles'),
       headers: <String, String>{
@@ -32,32 +32,37 @@ class CollectibleService extends BaseService {
         'value': request.value,
       }),
     );
-
-    if (response.statusCode != 201) {
-      throw Exception(response.body);
+    
+    if (response.statusCode > 299) {
+      throw Exception('Failed to create collectible: ${response.body}');
     }
 
-    return true;
+    return Collectible.fromJson(jsonDecode(response.body));
   }
 
   Future<Collectible> getCollectible(int collectibleId) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/collectibles/$collectibleId'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
-      },
-    );
-    log(response.statusCode.toString());
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/collectibles/$collectibleId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+        },
+      );
+      log('Response status: ${response.statusCode}');
+      log('Response body: ${response.body}');
 
-    if (response.statusCode != 200) {
-      throw Exception(response.body);
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load collectible: ${response.body}');
+      }
+      log("Decoding collectible");
+      Collectible collectible = Collectible.fromJson(jsonDecode(response.body));
+      log('Collectible loaded: ${collectible.name}');
+      return collectible;
+    } catch (e) {
+      log('Error on getCollectible: $e');
+      rethrow;
     }
-
-    log("Data arrived");
-    Collectible collectible = Collectible.fromJson(jsonDecode(response.body));
-    log(collectible.toString());
-    return collectible;
   }
 }
