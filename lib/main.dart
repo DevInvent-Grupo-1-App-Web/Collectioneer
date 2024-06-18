@@ -14,7 +14,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = ColorScheme.fromSeed(
       seedColor: const Color(0xFF8C4E28),
-      brightness: MediaQuery.of(context).platformBrightness,
+      // brightness: MediaQuery.of(context).platformBrightness,
+      brightness: Brightness.dark,
     );
 
     return MaterialApp(

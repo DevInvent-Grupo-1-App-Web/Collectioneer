@@ -36,7 +36,7 @@ class _CollectibleTileState extends State<CollectibleTile>
             padding: const EdgeInsets.all(8.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text("username", style: Theme.of(context).textTheme.labelLarge),
+              Text(widget.sourceItem.username, style: Theme.of(context).textTheme.labelLarge!.copyWith(color: Theme.of(context).colorScheme.onSurface),),
               Text(
                 widget.sourceItem.title,
                 style: Theme.of(context)
@@ -54,7 +54,6 @@ class _CollectibleTileState extends State<CollectibleTile>
             width: widget.width,
           ),
           SizedBox(
-            height: 96,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -64,9 +63,13 @@ class _CollectibleTileState extends State<CollectibleTile>
                     widget.sourceItem.description,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
-                    overflow: TextOverflow.fade,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    maxLines: 3,
                   ),
-                  Text(timeAgo(widget.sourceItem.createdAt), style: Theme.of(context).textTheme.labelSmall,)
+                  Text(timeAgo(widget.sourceItem.createdAt), style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ))
                 ],
               ),
             ),

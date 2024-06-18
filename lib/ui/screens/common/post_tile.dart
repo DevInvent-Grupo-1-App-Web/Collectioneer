@@ -33,7 +33,7 @@ class _PostTileState extends State<PostTile>
             padding: const EdgeInsets.all(8.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text("username", style: Theme.of(context).textTheme.labelLarge),
+              Text(widget.sourceItem.username, style: Theme.of(context).textTheme.labelLarge!.copyWith(color: Theme.of(context).colorScheme.onSurface),),
               Text(
                 widget.sourceItem.title,
                 style: Theme.of(context)
