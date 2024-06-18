@@ -136,6 +136,7 @@ Widget build(BuildContext context) {
                                 }
                                 : () {
                                     _joinCommunity(_filteredCommunities[index].id.toString());
+                                    UserPreferences().setLatestActiveCommunity(_filteredCommunities[index].id);
                                     Navigator.pushNamed(context, '/home');
                                   },
                             child: const Text('Entrar'),

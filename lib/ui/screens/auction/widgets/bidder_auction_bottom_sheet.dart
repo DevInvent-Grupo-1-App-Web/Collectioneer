@@ -3,16 +3,17 @@ import 'package:collectioneer/services/auction_service.dart';
 import 'package:collectioneer/services/models/bid_request.dart';
 import 'package:flutter/material.dart';
 
-class AuctionBottomSheet extends StatefulWidget {
-  AuctionBottomSheet({super.key, required this.auctionId});
+class BidderAuctionBottomSheet extends StatefulWidget {
+  BidderAuctionBottomSheet({super.key, required this.auctionId});
   final int auctionId;
-  late final Auction auction;
+  late Auction auction;
 
   @override
-  State<AuctionBottomSheet> createState() => _AuctionBottomSheetState();
+  State<BidderAuctionBottomSheet> createState() =>
+      _BidderAuctionBottomSheetState();
 }
 
-class _AuctionBottomSheetState extends State<AuctionBottomSheet> {
+class _BidderAuctionBottomSheetState extends State<BidderAuctionBottomSheet> {
   final TextEditingController _bidController =
       TextEditingController(text: '1050');
 
@@ -87,7 +88,7 @@ class _AuctionBottomSheetState extends State<AuctionBottomSheet> {
                                   controller: _bidController,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
-                                    labelText: 'Enter your bid',
+                                    labelText: 'Ingresa tu oferta',
                                     border: OutlineInputBorder(),
                                   ),
                                 ),
@@ -115,7 +116,7 @@ class _AuctionBottomSheetState extends State<AuctionBottomSheet> {
                                               .showSnackBar(
                                             const SnackBar(
                                               content: Text(
-                                                  'Bid placed successfully'),
+                                                  '¡Oferta enviada!'),
                                               duration: Duration(seconds: 2),
                                             ),
                                           );
