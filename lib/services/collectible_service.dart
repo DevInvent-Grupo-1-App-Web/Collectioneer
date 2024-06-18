@@ -1,61 +1,68 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'dart:developer';
+
 import 'package:collectioneer/models/collectible.dart';
+import 'package:collectioneer/services/base_service.dart';
+import 'package:collectioneer/services/models/collectible_request.dart';
+import 'package:collectioneer/user_preferences.dart';
+import 'package:http/http.dart' as http;
 
-class CollectibleService {
-  final String baseUrl;
+class CollectibleService extends BaseService {
+  static final CollectibleService _singleton = CollectibleService._internal();
 
-  CollectibleService({required this.baseUrl});
-
-  Future<List<Collectible>> fetchCollectibles({int? communityId, int? maxAmount, int? offset}) async {
-    final queryParameters = {
-      if (communityId != null) 'communityId': communityId.toString(),
-      if (maxAmount != null) 'maxAmount': maxAmount.toString(),
-      if (offset != null) 'offset': offset.toString(),
-    };
-
-    final uri = Uri.parse('$baseUrl/collectibles').replace(queryParameters: queryParameters);
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      final List<dynamic> responseBody = json.decode(response.body);
-      return responseBody.map((json) => Collectible.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load collectibles');
-    }
+  factory CollectibleService() {
+    return _singleton;
   }
 
-  Future<Collectible> fetchCollectibleById(int id) async {
-    final uri = Uri.parse('$baseUrl/collectibles/$id');
-    final response = await http.get(uri);
+  CollectibleService._internal();
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseBody = json.decode(response.body);
-      return Collectible.fromJson(responseBody);
-    } else {
-      throw Exception('Failed to load collectible');
-    }
-  }
-
-  Future<Collectible> createCollectible(Collectible collectible) async {
-    final uri = Uri.parse('$baseUrl/collectibles');
+  Future<Collectible> createCollectible(CollectibleRequest request) async {
     final response = await http.post(
-      uri,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'communityId': collectible.communityId,
-        'name': collectible.name,
-        'description': collectible.description,
-        'userId': collectible.ownerId,
-        'value': collectible.value,
+      Uri.parse('$baseUrl/collectibles'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'communityId': UserPreferences().getLatestActiveCommunity(),
+        'name': request.name,
+        'description': request.description,
+        'userId': UserPreferences().getUserId(),
+        'value': request.value,
       }),
     );
+    
+    if (response.statusCode > 299) {
+      throw Exception('Failed to create collectible: ${response.body}');
+    }
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseBody = json.decode(response.body);
-      return Collectible.fromJson(responseBody);
-    } else {
-      throw Exception('Failed to create collectible');
+    return Collectible.fromJson(jsonDecode(response.body));
+  }
+
+  Future<Collectible> getCollectible(int collectibleId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/collectibles/$collectibleId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+        },
+      );
+      log('Response status: ${response.statusCode}');
+      log('Response body: ${response.body}');
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load collectible: ${response.body}');
+      }
+      log("Decoding collectible");
+      Collectible collectible = Collectible.fromJson(jsonDecode(response.body));
+      log('Collectible loaded: ${collectible.name}');
+      return collectible;
+    } catch (e) {
+      log('Error on getCollectible: $e');
+      rethrow;
     }
   }
 }

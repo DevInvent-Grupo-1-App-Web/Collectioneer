@@ -2,6 +2,8 @@ import 'package:collectioneer/models/user.dart';
 import 'package:collectioneer/services/account_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
+import 'package:collectioneer/ui/screens/startup/forgot_password_screen.dart';
+import 'package:collectioneer/ui/screens/startup/splash_screen.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 
@@ -50,15 +52,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 16.0),
                       Text(
                         user.name,
-                        style: Theme.of(context).textTheme.labelLarge,
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                       ),
                       Text(
                         user.name,
-                        style: Theme.of(context).textTheme.labelSmall,
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                       ),
                       Text(
                         user.email,
-                        style: Theme.of(context).textTheme.labelSmall,
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
                       const SizedBox(height: 16.0),
                       FilledButton(
@@ -72,13 +80,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/forgot-password');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordScreen(),
+                              ),
+                            );
                           },
                           child: const Text("Cambiar contraseña")),
                       TextButton(
                           onPressed: () {
                             UserPreferences().clearUserPreferences();
-                            Navigator.pushNamed(context, '/splash');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SplashScreen())
+                            );
                           },
                           child: const Text("Cerrar sesión")),
                     ],

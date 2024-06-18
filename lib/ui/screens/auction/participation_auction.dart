@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AuctionParticipationScreen extends StatefulWidget {
-  const AuctionParticipationScreen({Key? key}) : super(key: key);
+  const AuctionParticipationScreen({super.key});
 
   @override
   _AuctionParticipationScreenState createState() =>
@@ -16,14 +16,14 @@ class _AuctionParticipationScreenState extends State<AuctionParticipationScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
+        title: const Center(
           child: Text(
             "Detalles",
             style: TextStyle(fontSize: 22),
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Navigate back
           },
@@ -44,12 +44,12 @@ class _AuctionParticipationScreenState extends State<AuctionParticipationScreen>
                 ),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               "Stormtrooper | Lego",
               style: TextStyle(fontSize: 16),
             ),
-            Text(
+            const Text(
               "@userhandle",
               style: TextStyle(fontSize: 11),
             ),
@@ -60,12 +60,12 @@ class _AuctionParticipationScreenState extends State<AuctionParticipationScreen>
                   height: 20,
                   width: 20,
                 ),
-                SizedBox(width: 8),
-                Text(
+                const SizedBox(width: 8),
+                const Text(
                   "4.8",
                   style: TextStyle(fontSize: 18),
                 ),
-                Spacer(),
+                const Spacer(),
                 Image.asset(
                   'assets/images/comment.png',
                   height: 20,
@@ -73,8 +73,8 @@ class _AuctionParticipationScreenState extends State<AuctionParticipationScreen>
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            Row(
+            const SizedBox(height: 20),
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Column(
@@ -105,17 +105,17 @@ class _AuctionParticipationScreenState extends State<AuctionParticipationScreen>
                 ),
               ],
             ),
-            SizedBox(height: 40),
-            Text(
+            const SizedBox(height: 40),
+            const Text(
               "Descripción",
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "Esta es la sexta versión de esta emblemática figura, perfecta para agregar a tu colección y exhibir con orgullo",
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -132,11 +132,11 @@ class _AuctionParticipationScreenState extends State<AuctionParticipationScreen>
                   onPressed: () {
                     _showOfferDialog();
                   },
-                  child: Text("Pujar"),
+                  child: const Text("Pujar"),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -148,10 +148,10 @@ void _showOfferDialog() {
     context: context, // This is correct
     builder: (BuildContext dialogContext) { // Use this context
       return AlertDialog(
-        title: Text("Realizar Oferta"),
+        title: const Text("Realizar Oferta"),
         content: TextField(
           controller: _offerController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Ingrese su oferta',
           ),
         ),
@@ -160,18 +160,18 @@ void _showOfferDialog() {
             onPressed: () {
               Navigator.of(dialogContext).pop(); // Use dialogContext
             },
-            child: Text("Cancelar"),
+            child: const Text("Cancelar"),
           ),
           TextButton(
             onPressed: () {
               if (_offerController.text.isNotEmpty) {
                 setState(() {
-                  price = "S/. " + _offerController.text;
+                  price = "S/. ${_offerController.text}";
                 });
               }
               Navigator.of(dialogContext).pop(); // Use dialogContext
             },
-            child: Text("Aceptar"),
+            child: const Text("Aceptar"),
           ),
         ],
       );

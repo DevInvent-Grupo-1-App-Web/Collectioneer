@@ -37,6 +37,8 @@ class AccountService extends BaseService {
     final token = body['token'];
 
     UserPreferences().setUserToken(token);
+    UserPreferences().setUserId(body['userId']);
+    // TODO: Fetch user communities
   }
 
   Future<void> register(
@@ -62,6 +64,7 @@ class AccountService extends BaseService {
     final token = body['token'];
 
     UserPreferences().setUserToken(token);
+    UserPreferences().setUserId(body['user']['id']);
   }
 
   Future<void> forgotPassword(String email) async {
