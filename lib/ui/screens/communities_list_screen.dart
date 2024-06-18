@@ -103,6 +103,9 @@ Widget build(BuildContext context) {
       Padding(
         padding: const EdgeInsets.all(20.0),
         child: TextField(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           controller: _searchController,
           decoration: const InputDecoration(
             labelText: 'Search',
@@ -129,9 +132,11 @@ Widget build(BuildContext context) {
                             onPressed: _isUserInCommunity(_filteredCommunities[index].id.toString())
                                 ? () {
                                   UserPreferences().setLatestActiveCommunity(_filteredCommunities[index].id);
+                                  Navigator.pushNamed(context, '/home');
                                 }
                                 : () {
                                     _joinCommunity(_filteredCommunities[index].id.toString());
+                                    Navigator.pushNamed(context, '/home');
                                   },
                             child: const Text('Join'),
                           ),

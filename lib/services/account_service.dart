@@ -64,7 +64,7 @@ class AccountService extends BaseService {
     final token = body['token'];
 
     UserPreferences().setUserToken(token);
-    UserPreferences().setUserId(body['userId']);
+    UserPreferences().setUserId(body['user']['id']);
   }
 
   Future<void> forgotPassword(String email) async {

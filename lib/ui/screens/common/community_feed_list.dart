@@ -15,10 +15,13 @@ class _CommunityFeedListState extends State<CommunityFeedList> {
   @override
   Widget build(BuildContext context) {
     return widget.feedItems.isEmpty
-        ? const Center(
+        ? Center(
             child: Text(
               "Categoría vacía\nPrueba añadir algo para verlo aquí",
               textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
           )
         : ListView.separated(

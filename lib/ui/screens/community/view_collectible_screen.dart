@@ -30,20 +30,20 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
-              appBar: AppTopBar(title: "Loading...", allowBack: true),
+              appBar: AppTopBar(title: "Cargando...", allowBack: true),
               body: Center(
                 child: CircularProgressIndicator(),
               ));
         } else if (snapshot.hasError) {
-          return Text('Error on displaying: ${snapshot.error}');
+          return Text('Error al mostrar: ${snapshot.error}');
         } else {
           if (snapshot.data == null) {
-            _exitInError("No data found.", context);
+            _exitInError("Sin datos disponibles", context);
           }
           collectible = snapshot.data!;
           return Scaffold(
               appBar: const AppTopBar(
-                title: "Collectible info",
+                title: "Ver coleccionable",
                 allowBack: true,
               ),
               body: Padding(
@@ -60,21 +60,21 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
                           onCommentTap: _showBottomSheet)
                     ],
                   )),
-              floatingActionButton: collectible.ownerId ==
-                      UserPreferences().getUserId()
-                  ? FloatingActionButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ViewAuctionScreen(collectibleId: collectibleId),
-                          ),
-                        );
-                      },
-                      child: const Icon(Icons.edit),
-                    )
-                  : null,
+              // floatingActionButton: collectible.ownerId ==
+              //         UserPreferences().getUserId()
+              //     ? FloatingActionButton(
+              //         onPressed: () {
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //               builder: (context) =>
+              //                   ViewAuctionScreen(collectibleId: collectibleId),
+              //             ),
+              //           );
+              //         },
+              //         child: const Icon(Icons.edit),
+              //       )
+              //     : null,
               bottomSheet: _buildBottomSheet());
         }
       },
@@ -125,9 +125,9 @@ class CollectibleInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(collectible.name, style: Theme.of(context).textTheme.titleLarge),
+        Text(collectible.name, style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Theme.of(context).colorScheme.onSurface)),
         Text(
-          collectible.ownerId.toString(),
+          '@${collectible.ownerId.toString()}',
           style: Theme.of(context)
               .textTheme
               .labelSmall
@@ -143,7 +143,8 @@ class CollectibleInfo extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   "4.8",
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
                 Text(" (126)",
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
@@ -165,10 +166,12 @@ class CollectibleInfo extends StatelessWidget {
         const Divider(
           height: 24,
         ),
-        Text("Descripción", style: Theme.of(context).textTheme.titleMedium),
+        Text("Descripción", style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onSurface),
+        ),
         const SizedBox(height: 8),
         Text(collectible.description,
-            style: Theme.of(context).textTheme.bodyMedium),
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant)),
       ],
     );
   }

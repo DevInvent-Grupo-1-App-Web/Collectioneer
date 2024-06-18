@@ -21,10 +21,10 @@ class _PostTileState extends State<PostTile>
     return GestureDetector(
       onTap: () {
         // UserPreferences().setCollectibleId(widget.sourceItem.id);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ViewCollectibleScreen()));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => const ViewCollectibleScreen()));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,7 +46,6 @@ class _PostTileState extends State<PostTile>
             ]),
           ),
           SizedBox(
-            height: 128,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(widget.sourceItem.description,

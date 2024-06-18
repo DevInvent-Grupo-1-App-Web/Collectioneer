@@ -48,34 +48,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              'Crear cuenta',
-              style: Theme.of(context).textTheme.displaySmall,
+              'Regístrate',
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
             ),
             Column(
               children: [
                 TextFormField(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   controller: _nameController,
                   decoration:
                       const InputDecoration(labelText: 'Nombres', filled: true),
                 ),
                 const SizedBox(height: 36.0),
                 TextFormField(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   controller: _usernameController,
                   decoration: const InputDecoration(
                       labelText: 'Nombre de usuario', filled: true),
                 ),
                 const SizedBox(height: 36.0),
                 TextFormField(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   controller: _emailController,
                   decoration:
                       const InputDecoration(labelText: 'Correo', filled: true),
                 ),
                 const SizedBox(height: 36.0),
                 TextFormField(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   controller: _passwordController,
                   obscureText: !isPasswordVisible, // Use isPasswordVisible here
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'Contraseña',
                     filled: true,
                     suffixIcon: IconButton(
                       icon: Icon(isPasswordVisible

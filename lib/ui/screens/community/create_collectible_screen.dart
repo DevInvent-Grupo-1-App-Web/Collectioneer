@@ -134,6 +134,9 @@ class _CreateCollectibleFormState extends State<CreateCollectibleForm> {
       children: [
         CollectiblePictureSelector(onImagePicked: widget.onImagePicked),
         TextField(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           controller: _titleController,
           decoration: const InputDecoration(
             hintText: "Title",
@@ -141,6 +144,9 @@ class _CreateCollectibleFormState extends State<CreateCollectibleForm> {
         ),
         const SizedBox(height: 8),
         TextField(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           controller: _priceController,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [
@@ -153,6 +159,9 @@ class _CreateCollectibleFormState extends State<CreateCollectibleForm> {
         ),
         const SizedBox(height: 8),
         TextField(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           controller: _descriptionController,
           maxLines: null,
           keyboardType: TextInputType.multiline,

@@ -59,7 +59,7 @@ class UserPreferences {
   }
 
   int getUserId() {
-    return _userId!;
+    return _userId?? 0;
   }
 
   void setUserId(int userId) {

@@ -42,14 +42,14 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
     return Scaffold(
         appBar: AppTopBar(
           title: 'Feed',
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                log("Search button pressed");
-              },
-            )
-          ],
+          // actions: [
+          //   IconButton(
+          //     icon: const Icon(Icons.search),
+          //     onPressed: () {
+          //       log("Search button pressed");
+          //     },
+          //   )
+          // ],
         ),
         body: FutureBuilder<List<FeedItem>>(
           future: CommunityService().getCommunityFeed(),
