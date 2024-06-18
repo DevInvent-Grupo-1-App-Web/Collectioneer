@@ -9,8 +9,6 @@ class SplashScreen extends StatelessWidget {
     UserPreferences prefs = UserPreferences();
 
     bool hasUserToken = prefs.hasUserToken();
-    int? latestActiveCommunity = prefs.getLatestActiveCommunity();
-    List<int> userCommunities = prefs.getUserCommunities();
 
     if (hasUserToken) {
         return AppRoutes.communities;

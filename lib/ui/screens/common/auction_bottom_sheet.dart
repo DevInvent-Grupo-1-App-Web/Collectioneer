@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class AuctionBottomSheet extends StatefulWidget {
   AuctionBottomSheet({super.key, required this.auctionId});
   final int auctionId;
-  late Auction auction;
+  late final Auction auction;
 
   @override
   State<AuctionBottomSheet> createState() => _AuctionBottomSheetState();

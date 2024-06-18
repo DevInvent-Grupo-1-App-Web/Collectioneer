@@ -6,7 +6,6 @@ import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/ui/screens/common/community_feed_list.dart';
 import 'package:collectioneer/ui/screens/common/feed_filter_chips.dart';
 import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
-import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 
 class CommunityFeedScreen extends StatefulWidget {
@@ -27,6 +26,8 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   }
 
   List<FeedItem> filterFeedItems(List<FeedItem> feedItems) {
+    feedItems.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
     if (currentFeedItemType == FeedItemType.any) {
       return feedItems;
     } else {
@@ -40,7 +41,7 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppTopBar(
-          title: currentFeedItemType.toString(),
+          title: 'Feed',
           actions: [
             IconButton(
               icon: const Icon(Icons.search),
