@@ -12,7 +12,7 @@ class CommunitiesListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {  
     return Scaffold(
-        appBar: const AppTopBar(title: "Communities"),
+        appBar: const AppTopBar(title: "Comunidades"),
         body: const Center(
           child: CommunityList(),
         ),
@@ -108,14 +108,14 @@ Widget build(BuildContext context) {
           ),
           controller: _searchController,
           decoration: const InputDecoration(
-            labelText: 'Search',
+            labelText: 'Buscar comunidades',
             suffixIcon: Icon(Icons.search),
           ),
         ),
       ),
       Expanded(
         child: _filteredCommunities.isEmpty
-            ? const Center(child: Text('No se encontraron comunidades'))
+            ? const Center(child: CircularProgressIndicator.adaptive())
             : ListView.builder(
                 itemCount: _filteredCommunities.length,
                 itemBuilder: (context, index) {
@@ -138,7 +138,7 @@ Widget build(BuildContext context) {
                                     _joinCommunity(_filteredCommunities[index].id.toString());
                                     Navigator.pushNamed(context, '/home');
                                   },
-                            child: const Text('Join'),
+                            child: const Text('Entrar'),
                           ),
                         )
                       ],

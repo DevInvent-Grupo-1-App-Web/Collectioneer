@@ -55,9 +55,7 @@ class _PostTileState extends State<PostTile>
                     widget.sourceItem.description,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
-                    overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    maxLines: 3,
                   ),
                   const SizedBox(height: 8.0),
                   Text(timeAgo(widget.sourceItem.createdAt), style: Theme.of(context).textTheme.labelSmall!.copyWith(

@@ -32,18 +32,18 @@ class _AppBottomBarState extends State<AppBottomBar> {
             },
             iconSize: 30.0,
           ),
-          IconButton(
-            icon: widget.selectedIndex == 1
-                ? const Icon(Icons.notifications)
-                : const Icon(Icons.notifications_outlined),
-            onPressed: () => {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const NotificationsScreen()))
-            },
-            iconSize: 30.0,
-          ),
+          // IconButton(
+          //   icon: widget.selectedIndex == 1
+          //       ? const Icon(Icons.notifications)
+          //       : const Icon(Icons.notifications_outlined),
+          //   onPressed: () => {
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //             builder: (context) => const NotificationsScreen()))
+          //   },
+          //   iconSize: 30.0,
+          // ),
           IconButton(
             icon: widget.selectedIndex == 2
                 ? const Icon(Icons.group)
