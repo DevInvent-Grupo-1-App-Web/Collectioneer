@@ -112,14 +112,18 @@ class CommunityService extends BaseService {
     return body.map((dynamic item) => Community.fromJson(item)).toList();
   }
   
-  Future<List<Community>> searchCommunities(String query) async {
+Future<List<Community>> searchCommunities(String query) async {
+  Uri uri;
+  // Si el término de búsqueda está vacío, ajusta la URI para obtener todas las comunidades
   if (query.isEmpty) {
-    throw Exception('Search term cannot be null or empty');
+    uri = Uri.parse('$baseUrl/communities');
+  } else {
+    uri = Uri.parse('$baseUrl/search/communities?SearchTerm=${Uri.encodeComponent(query)}');
   }
 
   try {
     final response = await http.get(
-      Uri.parse('$baseUrl/search/communities?SearchTerm=${Uri.encodeComponent(query)}'),
+      uri,
       headers: <String, String>{
         'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
         'Content-Type': 'application/json',
@@ -138,17 +142,8 @@ class CommunityService extends BaseService {
 }
 
   Future<List<FeedItem>> getCommunityFeed() async {
-    final int communityId = UserPreferences().getLatestActiveCommunity() ?? 0;
-    const int maxAmount = -1;
-    const int offset = 0;
-
     final response = await http.get(
-      Uri.parse('$baseUrl/collectibles')
-          .replace(queryParameters: <String, String>{
-        'CommunityId': communityId.toString(),
-        'MaxAmount': maxAmount.toString(),
-        'Offset': offset.toString(),
-      }),
+      Uri.parse('$baseUrl/${UserPreferences().getLatestActiveCommunity()}/feed'),
       headers: <String, String>{
         'Accept': 'application/json',
         'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
@@ -158,6 +153,8 @@ class CommunityService extends BaseService {
     if (response.statusCode != 200) {
       throw Exception(response.body);
     }
+    
+    log(response.body.toString());
 
     final List<dynamic> body = jsonDecode(response.body);
     final List<FeedItem> feedItems =

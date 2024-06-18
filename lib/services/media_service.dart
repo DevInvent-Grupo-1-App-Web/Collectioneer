@@ -1,5 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:developer';
+import 'package:collectioneer/models/media.dart';
+import 'package:collectioneer/services/models/media_post_request.dart';
 import 'package:http/http.dart' as http;
 import 'package:collectioneer/services/base_service.dart';
 import 'package:collectioneer/user_preferences.dart';
@@ -13,15 +15,14 @@ class MediaService extends BaseService {
 
   MediaService._internal();
 
-  // Función para convertir la imagen a base64
-  Future<String> imageToBase64(String imagePath) async {
-    final bytes = await File(imagePath).readAsBytes();
-    return base64Encode(bytes);
-  }
-
-  // Función para cargar los medios
-  Future<void> uploadMedia(String mediaName, String imagePath, String contentType, int attachedToId, String attachedToType) async {
-    final base64Image = await imageToBase64(imagePath);
+  Future<void> uploadMedia(String mediaName, String imageData, String contentType, int attachedToId, String attachedToType) async {
+    final MediaPostRequest mediaPostRequest = MediaPostRequest(
+      mediaName: mediaName,
+      content: imageData,
+      contentType: contentType,
+      attachedToId: attachedToId,
+      attachedToType: attachedToType,
+    );
 
     final response = await http.post(
       Uri.parse('$baseUrl/upload-media'),
@@ -29,26 +30,24 @@ class MediaService extends BaseService {
         'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, dynamic>{
-        'mediaName': mediaName,
-        'content': base64Image,
-        'contentType': contentType,
-        'attachedToId': attachedToId,
-        'attachedToType': attachedToType,
-      }),
+      body: jsonEncode(mediaPostRequest.toJson()),
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode > 299) {
+      log(mediaPostRequest.toJson().toString());
       throw Exception('Failed to upload media: ${response.body}');
     }
+
+    log('Media uploaded successfully:${response.statusCode}');
   }
 
-  Future<List<String>> getCollectibleMedia(int collectibleId) async {
+  Future<List<Media>> getCollectibleMedia(int collectibleId) async {
       final response = await http.get(
         Uri.parse('$baseUrl/media?ElementId=$collectibleId&ElementType=collectible'),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
         },
       );
       
@@ -57,7 +56,6 @@ class MediaService extends BaseService {
       }
 
       final List<dynamic> media = jsonDecode(response.body);
-      final List<String> mediaList = media.map((item) => item['mediaName'] as String).toList();
-      return mediaList;
+      return media.map((e) => Media.fromJson(e)).toList();
   }
 }

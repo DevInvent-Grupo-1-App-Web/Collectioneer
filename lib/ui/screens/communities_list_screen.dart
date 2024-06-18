@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
+import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 
 class CommunitiesListScreen extends StatelessWidget {
@@ -41,7 +42,8 @@ class _CommunityListState extends State<CommunityList> {
   final _communityService = CommunityService();
   final _searchController = TextEditingController();
 
-  void _loadCommunities(String query) async {
+
+   void _loadCommunities([String query = '']) async {
     final communities = await _communityService.searchCommunities(query);
     final userCommunities = await _communityService.getUserCommunities();
     setState(() {
@@ -87,11 +89,13 @@ void _filterCommunities() {
   }
 }
 
-@override
-void initState() {
-  super.initState();
-  _searchController.addListener(_filterCommunities);
-}
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_filterCommunities);
+    _loadCommunities(); // Carga todas las comunidades al inicio
+  }
+
 @override
 Widget build(BuildContext context) {
   return Column(
@@ -123,7 +127,9 @@ Widget build(BuildContext context) {
                           alignment: Alignment.centerRight,
                           child: FilledButton(
                             onPressed: _isUserInCommunity(_filteredCommunities[index].id.toString())
-                                ? null
+                                ? () {
+                                  UserPreferences().setLatestActiveCommunity(_filteredCommunities[index].id);
+                                }
                                 : () {
                                     _joinCommunity(_filteredCommunities[index].id.toString());
                                   },
