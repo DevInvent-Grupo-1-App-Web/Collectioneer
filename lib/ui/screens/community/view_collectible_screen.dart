@@ -22,8 +22,6 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
   final int collectibleId = UserPreferences().getCollectibleId();
   late Collectible collectible;
   bool isLoading = true;
-  late Auction auction;
-  late Bid bid;
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +89,8 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
     if (collectible.auctionId != null) {
       return AuctionBottomSheet(auctionId: collectible.auctionId!);
     }else{
-      DateTime deadline = auction.deadline ?? DateTime.now().add(Duration(days: 7));
-      double initialBid = bid.amount ?? 100.0;
-
+      DateTime deadline = DateTime.now().add(const Duration(days: 7));
+      double initialBid = 0.0;
     return ChangeToAuctionBottomSheet(
       deadline: deadline,
       initialBid: initialBid,
