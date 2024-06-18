@@ -3,20 +3,44 @@ import 'package:collectioneer/models/feed_item.dart';
 import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
-import 'package:collectioneer/ui/screens/common/collectible_feed_view.dart';
 import 'package:collectioneer/ui/screens/common/community_feed_list.dart';
 import 'package:collectioneer/ui/screens/common/feed_filter_chips.dart';
 import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
+import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 
-class CommunityFeedScreen extends StatelessWidget {
+class CommunityFeedScreen extends StatefulWidget {
   const CommunityFeedScreen({super.key});
+
+  @override
+  State<CommunityFeedScreen> createState() => _CommunityFeedScreenState();
+}
+
+class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
+  FeedItemType currentFeedItemType = FeedItemType.any;
+  List<FeedItem> feedItems = [];
+
+  void setFeedItemType(FeedItemType feedItemType) {
+    setState(() {
+      currentFeedItemType = feedItemType;
+    });
+  }
+
+  List<FeedItem> filterFeedItems(List<FeedItem> feedItems) {
+    if (currentFeedItemType == FeedItemType.any) {
+      return feedItems;
+    } else {
+      return feedItems
+          .where((element) => element.itemType == currentFeedItemType)
+          .toList();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppTopBar(
-          title: "Feed",
+          title: currentFeedItemType.toString(),
           actions: [
             IconButton(
               icon: const Icon(Icons.search),
@@ -26,15 +50,27 @@ class CommunityFeedScreen extends StatelessWidget {
             )
           ],
         ),
-        body: const Column(
-          children: [
-            SizedBox(height: 8),
-            FeedFilterChips(),
-            SizedBox(height: 8),
-            Expanded(
-              child: CommunityFeedList(),
-            ),
-          ],
+        body: FutureBuilder<List<FeedItem>>(
+          future: CommunityService().getCommunityFeed(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              feedItems = snapshot.data!;
+              return Column(
+                children: [
+                  const SizedBox(height: 8),
+                  FeedFilterChips(
+                    setFeedItemType: setFeedItemType,
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: CommunityFeedList(feedItems: filterFeedItems(feedItems)),
+                  ),
+                ],
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
         ),
         bottomNavigationBar: const AppBottomBar(selectedIndex: 0),
         floatingActionButton: FloatingActionButton(

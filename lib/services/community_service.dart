@@ -147,12 +147,7 @@ Future<List<Community>> searchCommunities(String query) async {
     const int offset = 0;
 
     final response = await http.get(
-      Uri.parse('$baseUrl/collectibles')
-          .replace(queryParameters: <String, String>{
-        'CommunityId': communityId.toString(),
-        'MaxAmount': maxAmount.toString(),
-        'Offset': offset.toString(),
-      }),
+      Uri.parse('$baseUrl/${UserPreferences().getLatestActiveCommunity()}/feed'),
       headers: <String, String>{
         'Accept': 'application/json',
         'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
@@ -162,6 +157,8 @@ Future<List<Community>> searchCommunities(String query) async {
     if (response.statusCode != 200) {
       throw Exception(response.body);
     }
+    
+    log(response.body.toString());
 
     final List<dynamic> body = jsonDecode(response.body);
     final List<FeedItem> feedItems =

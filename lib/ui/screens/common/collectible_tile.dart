@@ -6,18 +6,18 @@ import 'package:collectioneer/ui/screens/common/async_media_display.dart';
 import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
 import 'package:collectioneer/user_preferences.dart';
 
-class CollectibleFeedView extends StatefulWidget {
-  const CollectibleFeedView(
+class CollectibleTile extends StatefulWidget {
+  const CollectibleTile(
       {super.key, required this.sourceItem, required this.width});
   final FeedItem sourceItem;
   final double width;
 
   @override
-  State<CollectibleFeedView> createState() => _CollectibleFeedViewState();
+  State<CollectibleTile> createState() => _CollectibleTileState();
 }
 
-class _CollectibleFeedViewState extends State<CollectibleFeedView> with AutomaticKeepAliveClientMixin {
-
+class _CollectibleTileState extends State<CollectibleTile>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 

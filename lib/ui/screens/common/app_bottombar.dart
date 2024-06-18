@@ -28,7 +28,7 @@ class _AppBottomBarState extends State<AppBottomBar> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CommunityFeedScreen()))
+                      builder: (context) => CommunityFeedScreen()))
             },
             iconSize: 30.0,
           ),

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
+import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 
 class CommunitiesListScreen extends StatelessWidget {
@@ -126,7 +127,9 @@ Widget build(BuildContext context) {
                           alignment: Alignment.centerRight,
                           child: FilledButton(
                             onPressed: _isUserInCommunity(_filteredCommunities[index].id.toString())
-                                ? null
+                                ? () {
+                                  UserPreferences().setLatestActiveCommunity(_filteredCommunities[index].id);
+                                }
                                 : () {
                                     _joinCommunity(_filteredCommunities[index].id.toString());
                                   },
