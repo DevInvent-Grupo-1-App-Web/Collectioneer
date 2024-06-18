@@ -102,6 +102,15 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          if (_imageFile == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Por favor, selecciona una imagen."),
+              ),
+            );
+            return;
+          }
+
           var collectible = await postCollectible();
           String filename = path.basename(_imageFile!.path);
           postMedia(_imageFile!, collectible.id, filename);

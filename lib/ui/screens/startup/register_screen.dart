@@ -41,6 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -89,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _passwordController,
                   obscureText: !isPasswordVisible, // Use isPasswordVisible here
                   decoration: InputDecoration(
-                    labelText: 'Contraseña',
+                    labelText: 'Password',
                     filled: true,
                     suffixIcon: IconButton(
                       icon: Icon(isPasswordVisible
