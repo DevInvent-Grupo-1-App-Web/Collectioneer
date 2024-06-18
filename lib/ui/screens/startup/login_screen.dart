@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () async {
                     try {
                       if (await _login()) {
-                        navigateTo(AppRoutes.home);
+                        navigateTo(AppRoutes.communities);
                       }
                     } catch (e) {
                       log('Inicio de sesión fallido: $e');
