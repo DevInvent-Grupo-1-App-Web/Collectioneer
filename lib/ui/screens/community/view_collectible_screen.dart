@@ -1,6 +1,9 @@
+import 'package:collectioneer/models/auction.dart';
+import 'package:collectioneer/models/bid.dart';
 import 'package:collectioneer/ui/screens/auction/view_auction_screen.dart';
 import 'package:collectioneer/ui/screens/common/async_media_display.dart';
 import 'package:collectioneer/ui/screens/common/auction_bottom_sheet.dart';
+import 'package:collectioneer/ui/screens/common/change_to_auction_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:collectioneer/models/collectible.dart';
 import 'package:collectioneer/services/collectible_service.dart';
@@ -41,6 +44,7 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
             _exitInError("Sin datos disponibles", context);
           }
           collectible = snapshot.data!;
+          
           return Scaffold(
               appBar: const AppTopBar(
                 title: "Ver coleccionable",
@@ -84,8 +88,15 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
   Widget? _buildBottomSheet() {
     if (collectible.auctionId != null) {
       return AuctionBottomSheet(auctionId: collectible.auctionId!);
+    }else{
+      DateTime deadline = DateTime.now().add(const Duration(days: 7));
+      double initialBid = 0.0;
+    return ChangeToAuctionBottomSheet(
+      deadline: deadline,
+      initialBid: initialBid,
+    );
     }
-    return null;
+  
   }
 
   void _exitInError(String error, BuildContext context) {
