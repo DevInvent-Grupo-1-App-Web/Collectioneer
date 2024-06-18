@@ -166,7 +166,7 @@ void _showOfferDialog() {
             onPressed: () {
               if (_offerController.text.isNotEmpty) {
                 setState(() {
-                  price = "S/. " + _offerController.text;
+                  price = "S/. ${_offerController.text}";
                 });
               }
               Navigator.of(dialogContext).pop(); // Use dialogContext

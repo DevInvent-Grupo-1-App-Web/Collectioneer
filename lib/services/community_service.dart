@@ -142,10 +142,6 @@ Future<List<Community>> searchCommunities(String query) async {
 }
 
   Future<List<FeedItem>> getCommunityFeed() async {
-    final int communityId = UserPreferences().getLatestActiveCommunity() ?? 0;
-    const int maxAmount = -1;
-    const int offset = 0;
-
     final response = await http.get(
       Uri.parse('$baseUrl/${UserPreferences().getLatestActiveCommunity()}/feed'),
       headers: <String, String>{
