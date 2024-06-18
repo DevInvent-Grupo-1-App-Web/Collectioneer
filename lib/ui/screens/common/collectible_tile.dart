@@ -67,6 +67,7 @@ class _CollectibleTileState extends State<CollectibleTile>
                     softWrap: true,
                     maxLines: 3,
                   ),
+                  const SizedBox(height: 8.0),
                   Text(timeAgo(widget.sourceItem.createdAt), style: Theme.of(context).textTheme.labelSmall!.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ))

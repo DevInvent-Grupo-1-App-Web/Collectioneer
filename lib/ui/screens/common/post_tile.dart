@@ -48,17 +48,45 @@ class _PostTileState extends State<PostTile>
           SizedBox(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(widget.sourceItem.description,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
-                  overflow: TextOverflow.fade,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.sourceItem.description,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface),
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    maxLines: 3,
                   ),
+                  const SizedBox(height: 8.0),
+                  Text(timeAgo(widget.sourceItem.createdAt), style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ))
+                ],
+              ),
             ),
           )
         ],
       ),
     );
+  }
+
+  String timeAgo(DateTime time) {
+    final now = DateTime.now();
+    final difference = now.difference(time);
+    if (difference.inDays > 365) {
+      return '${difference.inDays ~/ 365} years ago';
+    } else if (difference.inDays > 30) {
+      return '${difference.inDays ~/ 30} months ago';
+    } else if (difference.inDays > 0) {
+      return '${difference.inDays} days ago';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} hours ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} minutes ago';
+    } else {
+      return 'Just now';
+    }
   }
 }
