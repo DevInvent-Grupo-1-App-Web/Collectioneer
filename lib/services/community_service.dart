@@ -162,4 +162,23 @@ Future<List<Community>> searchCommunities(String query) async {
     log("Feed items: ${feedItems.length}");
     return feedItems;
   }
+
+  Future<List<FeedItem>> searchInCommunity(String query) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/community/${UserPreferences().getLatestActiveCommunity()}/search?query=$query'),
+      headers: <String, String>{
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+      },
+    );
+
+    if (response.statusCode > 299) {
+      log('$baseUrl/community/${UserPreferences().getLatestActiveCommunity()}/search&query=$query');
+      log('Failed to search in community: ${response.body}');
+      throw Exception(response.body);
+    }
+
+    final List<dynamic> body = jsonDecode(response.body);
+    return body.map((dynamic item) => FeedItem.fromJson(item)).toList();
+  }
 }

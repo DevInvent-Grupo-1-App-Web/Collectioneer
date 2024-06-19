@@ -26,12 +26,12 @@ class SplashScreen extends StatelessWidget {
 
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: const Color(0xFF8C4E28),
         body: Center(
           child: Text(
             'Collectioneer',
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: Colors.white
                 ),
           ),
         )

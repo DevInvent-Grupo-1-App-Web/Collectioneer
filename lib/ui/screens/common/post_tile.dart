@@ -1,3 +1,5 @@
+import 'package:collectioneer/ui/screens/community/view_post_screen.dart';
+import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:collectioneer/models/feed_item.dart';
 import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
@@ -20,11 +22,11 @@ class _PostTileState extends State<PostTile>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // UserPreferences().setCollectibleId(widget.sourceItem.id);
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => const ViewCollectibleScreen()));
+        UserPreferences().setActiveElement(widget.sourceItem.id);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ViewPostScreen()));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -95,7 +95,7 @@ class _ChangeToAuctionBottomSheetState
                 FilledButton(
                     onPressed: () async {
                       await setAuction();
-                        Navigator.of(context).pop();
+                      Navigator.of(context).pop();
                     },
                     child: const Text('Iniciar subasta')),
               ],
@@ -118,7 +118,7 @@ class _ChangeToAuctionBottomSheetState
     final AuctionRequest request = AuctionRequest(
       communityId: UserPreferences().getLatestActiveCommunity()!,
       auctioneerId: UserPreferences().getUserId(),
-      collectibleId: UserPreferences().getCollectibleId(),
+      collectibleId: UserPreferences().getActiveElement(),
       startingPrice: double.parse(_initialPriceController.text),
       deadline: DateTime.parse(deadline!.toIso8601String()),
     );

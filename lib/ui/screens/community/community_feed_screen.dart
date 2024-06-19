@@ -6,6 +6,9 @@ import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/ui/screens/common/community_feed_list.dart';
 import 'package:collectioneer/ui/screens/common/feed_filter_chips.dart';
 import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
+import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
+import 'package:collectioneer/ui/screens/community/view_post_screen.dart';
+import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 
 class CommunityFeedScreen extends StatefulWidget {
@@ -40,16 +43,20 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppTopBar(
-          title: 'Feed',
-          // actions: [
-          //   IconButton(
-          //     icon: const Icon(Icons.search),
-          //     onPressed: () {
-          //       log("Search button pressed");
-          //     },
-          //   )
-          // ],
+        appBar: AppBar(
+          title: const Text("Feed"),
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: SearchInCommunity(),
+                );
+              },
+            )
+          ],
         ),
         body: FutureBuilder<List<FeedItem>>(
           future: CommunityService().getCommunityFeed(),
@@ -64,7 +71,8 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
                   ),
                   const SizedBox(height: 8),
                   Expanded(
-                    child: CommunityFeedList(feedItems: filterFeedItems(feedItems)),
+                    child: CommunityFeedList(
+                        feedItems: filterFeedItems(feedItems)),
                   ),
                 ],
               );
@@ -86,21 +94,77 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   }
 }
 
-class FeedSearchBar extends StatefulWidget {
-  const FeedSearchBar({super.key});
+class SearchInCommunity extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      )
+    ];
+  }
 
   @override
-  State<FeedSearchBar> createState() => _FeedSearchBarState();
-}
-
-class _FeedSearchBarState extends State<FeedSearchBar> {
-  @override
-  Widget build(BuildContext context) {
-    return const TextField(
-      decoration: InputDecoration(
-        hintText: "Buscar en el feed",
-        prefixIcon: Icon(Icons.search),
-      ),
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
     );
   }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return FutureBuilder(
+      future: CommunityService().searchInCommunity(query),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } 
+        if (snapshot.hasData) {
+          final List<FeedItem> feedItems = snapshot.data!;
+          return ListView.builder(
+            itemCount: feedItems.length,
+            itemBuilder: (context, index) {
+              final FeedItem feedItem = feedItems[index];
+              return ListTile(
+                title: Text(feedItem.title),
+                subtitle: Text(feedItem.description, maxLines: 1, 
+                overflow: TextOverflow.ellipsis),
+                onTap: () {
+                  UserPreferences().setActiveElement(feedItem.id);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        if (feedItem.itemType == FeedItemType.post) {
+                          return const ViewPostScreen();
+                        }
+                          return const ViewCollectibleScreen();
+                        
+                      }
+                      ),
+                    );
+                }
+                    ,
+                  );
+                },
+              );
+            }
+            
+            return const Center(child: CircularProgressIndicator());
+            }
+          );
+      }
+      
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return const Center(child: Text('Search for something'));
+  }
 }
+
+
