@@ -35,16 +35,15 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("¿Descartar cambios?",
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(color:
-                    Theme.of(context).colorScheme.onSurface,
-          )
-          ),
-
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  )),
           content: Text(
             "¿Quieres descartas los cambios que hiciste? No podrás recuperarlos.",
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),),
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -69,7 +68,7 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
     final CollectibleRequest request =
         _formKey.currentState!.getCollectibleRequest();
     var collectible = await _collectibleService.createCollectible(request);
-    UserPreferences().setCollectibleId(collectible.id);
+    UserPreferences().setActiveElement(collectible.id);
     return collectible;
   }
 
@@ -153,8 +152,8 @@ class _CreateCollectibleFormState extends State<CreateCollectibleForm> {
         CollectiblePictureSelector(onImagePicked: widget.onImagePicked),
         TextField(
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
           controller: _titleController,
           decoration: const InputDecoration(
             hintText: "Nombre del coleccionable",
@@ -163,8 +162,8 @@ class _CreateCollectibleFormState extends State<CreateCollectibleForm> {
         const SizedBox(height: 8),
         TextField(
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
           controller: _priceController,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [
@@ -178,8 +177,8 @@ class _CreateCollectibleFormState extends State<CreateCollectibleForm> {
         const SizedBox(height: 8),
         TextField(
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
           controller: _descriptionController,
           maxLines: null,
           keyboardType: TextInputType.multiline,

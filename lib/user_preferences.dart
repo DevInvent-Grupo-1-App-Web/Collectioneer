@@ -12,9 +12,9 @@ class UserPreferences {
   int? _latestActiveCommunity = 1;
   List<int> _userRoles = [];
   List<int> _userCommunities = [];
-  int _collectibleId = 0;
+  int _activeElement = 0;
 
-  void setUserToken (String token) {
+  void setUserToken(String token) {
     _userToken = token;
   }
 
@@ -55,25 +55,24 @@ class UserPreferences {
   }
 
   bool hasUserToken() {
-    return _userToken != null && _userToken != 'no_token';
+    return _userToken != null;
   }
 
   int getUserId() {
-    return _userId?? 0;
+    return _userId ?? 0;
   }
 
   void setUserId(int userId) {
     _userId = userId;
   }
 
-  void setCollectibleId(int collectibleId) {
-    _collectibleId = collectibleId;
+  void setActiveElement(int elementId) {
+    _activeElement = elementId;
   }
 
-  int getCollectibleId() {
-    return _collectibleId;
+  int getActiveElement() {
+    return _activeElement;
   }
-
 
   void clearUserPreferences() {
     _userToken = null;
@@ -81,6 +80,6 @@ class UserPreferences {
     _latestActiveCommunity = null;
     _userRoles = [];
     _userCommunities = [];
-    _collectibleId = 0;
+    _activeElement = 0;
   }
 }

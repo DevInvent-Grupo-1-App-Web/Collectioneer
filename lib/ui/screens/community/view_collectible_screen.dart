@@ -18,7 +18,7 @@ class ViewCollectibleScreen extends StatefulWidget {
 }
 
 class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
-  final int collectibleId = UserPreferences().getCollectibleId();
+  final int collectibleId = UserPreferences().getActiveElement();
   late Collectible collectible;
   bool isLoading = true;
 
@@ -48,10 +48,7 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
           collectible = snapshot.data!;
 
           return Scaffold(
-            appBar: AppTopBar(
-                title: _pageName(collectible),
-                allowBack: true
-                ),
+            appBar: AppTopBar(title: _pageName(collectible), allowBack: true),
             body: Padding(
                 padding: const EdgeInsets.all(32),
                 child: ListView(
@@ -89,8 +86,8 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
       builder: (context) {
         return Container(
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: ChangeToAuctionBottomSheet(),
         );
       },
@@ -140,7 +137,7 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
 
   Widget _switchUserBottomSheet(BuildContext context) {
     if (collectible.ownerId == UserPreferences().getUserId()) {
-      return OwnerAuctionBottomSheet();
+      return OwnerAuctionBottomSheet(auctionId: collectible.auctionId!);
     } else {
       return BidderAuctionBottomSheet(auctionId: collectible.auctionId!);
     }

@@ -38,7 +38,7 @@ class _BidderAuctionBottomSheetState extends State<BidderAuctionBottomSheet> {
                   BoxShadow(
                     color: Theme.of(context).brightness == Brightness.dark
                         ? Colors.transparent
-                        : Theme.of(context).colorScheme.onSurface,
+                        : Colors.black.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(0, -4),
                   )
