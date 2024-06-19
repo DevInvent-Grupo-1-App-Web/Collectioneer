@@ -25,27 +25,28 @@ class _BidderAuctionBottomSheetState extends State<BidderAuctionBottomSheet> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Text('Error on displaying: ${snapshot.error}');
+            return Text('Error al mostrar: ${snapshot.error}');
           } else {
             if (snapshot.data == null) {
-              return const Text('No data found.');
+              return const Text('Sin datos disponibles.');
             }
             widget.auction = snapshot.data!;
             return Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.transparent
+                        : Theme.of(context).colorScheme.onSurface,
                     blurRadius: 4,
-                    offset: Offset(0, -4),
+                    offset: const Offset(0, -4),
                   )
                 ],
               ),
               padding: const EdgeInsets.only(
                   top: 24, left: 32, right: 32, bottom: 24),
               width: MediaQuery.of(context).size.width,
-              height: 160,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -57,19 +58,46 @@ class _BidderAuctionBottomSheetState extends State<BidderAuctionBottomSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Última oferta',
-                              style: Theme.of(context).textTheme.labelMedium),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface)),
                           Text(
-                              '\$ ${widget.auction.startingPrice.toStringAsFixed(2)}',
-                              style: Theme.of(context).textTheme.headlineSmall),
+                            '\$ ${widget.auction.startingPrice.toStringAsFixed(2)}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                          ),
                         ],
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Tiempo restante',
-                              style: Theme.of(context).textTheme.labelMedium),
-                          Text(widget.auction.getRemainingTime(),
-                              style: Theme.of(context).textTheme.headlineSmall),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface)),
+                          Text(
+                            widget.auction.getRemainingTime(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                          ),
                         ],
                       )
                     ],
@@ -83,8 +111,16 @@ class _BidderAuctionBottomSheetState extends State<BidderAuctionBottomSheet> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text('Ofertar'),
+                                title: Text('Ofertar',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium!.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
+                                ),
                                 content: TextField(
+                                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                   controller: _bidController,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
@@ -115,8 +151,7 @@ class _BidderAuctionBottomSheetState extends State<BidderAuctionBottomSheet> {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             const SnackBar(
-                                              content: Text(
-                                                  '¡Oferta enviada!'),
+                                              content: Text('¡Oferta enviada!'),
                                               duration: Duration(seconds: 2),
                                             ),
                                           );

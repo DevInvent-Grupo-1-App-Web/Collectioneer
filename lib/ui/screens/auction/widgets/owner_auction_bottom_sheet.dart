@@ -7,9 +7,9 @@ class OwnerAuctionBottomSheet extends StatefulWidget {
   final int auctionId = 1;
   late final Auction auction;
 
-
   @override
-  State<OwnerAuctionBottomSheet> createState() => _OwnerAuctionBottomSheetState();
+  State<OwnerAuctionBottomSheet> createState() =>
+      _OwnerAuctionBottomSheetState();
 }
 
 class _OwnerAuctionBottomSheetState extends State<OwnerAuctionBottomSheet> {
@@ -29,12 +29,14 @@ class _OwnerAuctionBottomSheetState extends State<OwnerAuctionBottomSheet> {
             widget.auction = snapshot.data!;
             return Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                boxShadow: const [
+                color: Theme.of(context).colorScheme.surfaceBright,
+                boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.transparent
+                        : Theme.of(context).colorScheme.onSurface,
                     blurRadius: 4,
-                    offset: Offset(0, -4),
+                    offset: const Offset(0, -4),
                   )
                 ],
               ),
@@ -51,19 +53,48 @@ class _OwnerAuctionBottomSheetState extends State<OwnerAuctionBottomSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Última oferta',
-                              style: Theme.of(context).textTheme.labelMedium),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface)),
                           Text(
-                              '\$ ${widget.auction.startingPrice.toStringAsFixed(2)}',
-                              style: Theme.of(context).textTheme.headlineSmall),
+                            '\$ ${widget.auction.startingPrice.toStringAsFixed(2)}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                          ),
                         ],
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Tiempo restante',
-                              style: Theme.of(context).textTheme.labelMedium),
-                          Text(widget.auction.getRemainingTime(),
-                              style: Theme.of(context).textTheme.headlineSmall),
+                          Text(
+                            'Tiempo restante',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                          ),
+                          Text(
+                            widget.auction.getRemainingTime(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                          ),
                         ],
                       )
                     ],
