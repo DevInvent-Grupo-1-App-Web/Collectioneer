@@ -1,14 +1,5 @@
-import 'dart:ffi';
-
 import 'package:collectioneer/services/post_service.dart';
-import 'package:collectioneer/ui/screens/auction/widgets/owner_auction_bottom_sheet.dart';
-import 'package:collectioneer/ui/screens/common/async_media_display.dart';
-import 'package:collectioneer/ui/screens/auction/widgets/bidder_auction_bottom_sheet.dart';
-import 'package:collectioneer/ui/screens/common/change_to_auction_bottom_sheet.dart';
-import 'package:collectioneer/ui/screens/common/collectible_info.dart';
 import 'package:flutter/material.dart';
-import 'package:collectioneer/models/collectible.dart';
-import 'package:collectioneer/services/collectible_service.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:collectioneer/ui/screens/common/interactions_bottom_sheet.dart';
