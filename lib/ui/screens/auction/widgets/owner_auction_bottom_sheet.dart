@@ -1,15 +1,17 @@
+import 'dart:developer';
+
 import 'package:collectioneer/models/auction.dart';
 import 'package:collectioneer/services/auction_service.dart';
 import 'package:flutter/material.dart';
 
 class OwnerAuctionBottomSheet extends StatefulWidget {
-  OwnerAuctionBottomSheet({super.key});
-  final int auctionId = 1;
+  OwnerAuctionBottomSheet({super.key, required this.auctionId});
+  final int auctionId;
   late final Auction auction;
 
-
   @override
-  State<OwnerAuctionBottomSheet> createState() => _OwnerAuctionBottomSheetState();
+  State<OwnerAuctionBottomSheet> createState() =>
+      _OwnerAuctionBottomSheetState();
 }
 
 class _OwnerAuctionBottomSheetState extends State<OwnerAuctionBottomSheet> {
@@ -21,20 +23,25 @@ class _OwnerAuctionBottomSheetState extends State<OwnerAuctionBottomSheet> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Text('Error on displaying: ${snapshot.error}');
+            return Text('Error al mostrar: ${snapshot.error}');
           } else {
             if (snapshot.data == null) {
-              return const Text('No data found.');
+              return const Text('Sin datos disponibles.');
             }
             widget.auction = snapshot.data!;
+
+            log('Auction: ${widget.auction.toString()}');
+
             return Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                boxShadow: const [
+                color: Theme.of(context).colorScheme.surfaceBright,
+                boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.transparent
+                        : Colors.black.withOpacity(0.1),
                     blurRadius: 4,
-                    offset: Offset(0, -4),
+                    offset: const Offset(0, -4),
                   )
                 ],
               ),
@@ -51,19 +58,48 @@ class _OwnerAuctionBottomSheetState extends State<OwnerAuctionBottomSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Última oferta',
-                              style: Theme.of(context).textTheme.labelMedium),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface)),
                           Text(
-                              '\$ ${widget.auction.startingPrice.toStringAsFixed(2)}',
-                              style: Theme.of(context).textTheme.headlineSmall),
+                            '\$ ${widget.auction.startingPrice.toStringAsFixed(2)}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                          ),
                         ],
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Tiempo restante',
-                              style: Theme.of(context).textTheme.labelMedium),
-                          Text(widget.auction.getRemainingTime(),
-                              style: Theme.of(context).textTheme.headlineSmall),
+                          Text(
+                            'Tiempo restante',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                          ),
+                          Text(
+                            widget.auction.getRemainingTime(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
+                          ),
                         ],
                       )
                     ],

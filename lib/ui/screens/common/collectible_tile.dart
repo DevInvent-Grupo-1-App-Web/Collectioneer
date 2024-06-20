@@ -23,7 +23,7 @@ class _CollectibleTileState extends State<CollectibleTile>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        UserPreferences().setCollectibleId(widget.sourceItem.id);
+        UserPreferences().setActiveElement(widget.sourceItem.id);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -36,7 +36,13 @@ class _CollectibleTileState extends State<CollectibleTile>
             padding: const EdgeInsets.all(8.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(widget.sourceItem.username, style: Theme.of(context).textTheme.labelLarge!.copyWith(color: Theme.of(context).colorScheme.onSurface),),
+              Text(
+                widget.sourceItem.username,
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge!
+                    .copyWith(color: Theme.of(context).colorScheme.onSurface),
+              ),
               Text(
                 widget.sourceItem.title,
                 style: Theme.of(context)
@@ -68,9 +74,11 @@ class _CollectibleTileState extends State<CollectibleTile>
                     maxLines: 3,
                   ),
                   const SizedBox(height: 8.0),
-                  Text(timeAgo(widget.sourceItem.createdAt), style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ))
+                  Text(timeAgo(widget.sourceItem.createdAt),
+                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ))
                 ],
               ),
             ),
