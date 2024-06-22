@@ -81,7 +81,6 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
             }
           },
         ),
-        bottomNavigationBar: const AppBottomBar(selectedIndex: 0),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(

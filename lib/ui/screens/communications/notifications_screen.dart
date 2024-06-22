@@ -12,7 +12,6 @@ class NotificationsScreen extends StatelessWidget {
       body: Center(
         child: Text('Your content here'),
       ),
-      bottomNavigationBar: AppBottomBar(selectedIndex: 1),
     );
   }
 }
