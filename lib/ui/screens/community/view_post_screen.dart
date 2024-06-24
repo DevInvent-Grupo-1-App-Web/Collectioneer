@@ -1,18 +1,11 @@
-import 'dart:ffi';
 
 import 'package:collectioneer/services/post_service.dart';
-import 'package:collectioneer/ui/screens/auction/widgets/owner_auction_bottom_sheet.dart';
-import 'package:collectioneer/ui/screens/common/async_media_display.dart';
-import 'package:collectioneer/ui/screens/auction/widgets/bidder_auction_bottom_sheet.dart';
-import 'package:collectioneer/ui/screens/common/change_to_auction_bottom_sheet.dart';
-import 'package:collectioneer/ui/screens/common/collectible_info.dart';
 import 'package:flutter/material.dart';
-import 'package:collectioneer/models/collectible.dart';
-import 'package:collectioneer/services/collectible_service.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:collectioneer/ui/screens/common/interactions_bottom_sheet.dart';
 import 'package:intl/intl.dart';
+import 'package:markdown_widget/widget/markdown.dart';
 
 import '../../../models/post.dart';
 
@@ -56,12 +49,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                 padding: const EdgeInsets.all(32),
                 child: ListView(
                   children: [
-                    Text(
-                      post.content,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface),
-                      softWrap: true,
-                    ),
+                    buildMarkdown(post.content),
                     const Divider(height: 16),
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,6 +88,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
       },
     );
   }
+
+  Widget buildMarkdown(String content) => MarkdownWidget(data: content);
 
   void _exitInError(String error, BuildContext context) {
     Navigator.pop(context);
