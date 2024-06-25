@@ -16,7 +16,6 @@ class CommunitiesListScreen extends StatelessWidget {
         body: const Center(
           child: CommunityList(),
         ),
-        bottomNavigationBar: const AppBottomBar(selectedIndex: 2),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, '/add-community');
@@ -41,16 +40,37 @@ class _CommunityListState extends State<CommunityList> {
   List _filteredCommunities = [];
   final _communityService = CommunityService();
   final _searchController = TextEditingController();
+  // Añade una variable para la suscripción
+  late final VoidCallback _searchListener;
 
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa el listener y lo añade al controlador
+    _searchListener = _filterCommunities;
+    _searchController.addListener(_searchListener);
+    _loadCommunities(); // Carga todas las comunidades al inicio
+  }
 
-   void _loadCommunities([String query = '']) async {
+  @override
+  void dispose() {
+    // Cancela la suscripción al controlador antes de desechar el widget
+    _searchController.removeListener(_searchListener);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _loadCommunities([String query = '']) async {
     final communities = await _communityService.searchCommunities(query);
     final userCommunities = await _communityService.getUserCommunities();
-    setState(() {
-      _communities = communities;
-      _userCommunities = userCommunities;
-      _filteredCommunities = _communities;
-    });
+    // Verifica si el widget aún está montado antes de llamar a setState
+    if (mounted) {
+      setState(() {
+        _communities = communities;
+        _userCommunities = userCommunities;
+        _filteredCommunities = _communities;
+      });
+    }
   }
 
   bool _isUserInCommunity(String communityId) {
@@ -88,13 +108,6 @@ void _filterCommunities() {
     _loadCommunities(query);
   }
 }
-
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(_filterCommunities);
-    _loadCommunities(); // Carga todas las comunidades al inicio
-  }
 
 @override
 Widget build(BuildContext context) {
