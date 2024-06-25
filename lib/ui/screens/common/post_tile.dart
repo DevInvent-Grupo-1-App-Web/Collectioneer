@@ -2,7 +2,6 @@ import 'package:collectioneer/ui/screens/community/view_post_screen.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:collectioneer/models/feed_item.dart';
-import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
 
 class PostTile extends StatefulWidget {
   const PostTile({super.key, required this.sourceItem, required this.width});

@@ -67,7 +67,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                 _selectedIndex = index;
               });
             },
-            children: [
+            children: const [
               CommentsList(),
               ReviewsList(),
             ],

@@ -1,11 +1,10 @@
-import 'dart:developer';
 import 'package:collectioneer/models/feed_item.dart';
 import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
-import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/ui/screens/common/community_feed_list.dart';
 import 'package:collectioneer/ui/screens/common/feed_filter_chips.dart';
 import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
+import 'package:collectioneer/ui/screens/community/create_post_screen.dart';
 import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
 import 'package:collectioneer/ui/screens/community/view_post_screen.dart';
 import 'package:collectioneer/user_preferences.dart';
@@ -82,15 +81,40 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
           },
         ),
         bottomNavigationBar: const AppBottomBar(selectedIndex: 0),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CreateCollectibleScreen()));
-          },
-          child: const Icon(Icons.add),
-        ));
+        floatingActionButton: Column(
+    mainAxisAlignment: MainAxisAlignment.end,
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      FloatingActionButton.small(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreatePostScreen()),
+          );
+        },
+        heroTag: null,
+        child: const Icon(
+          Icons.post_add
+        ),
+      ),
+      const SizedBox(
+        height: 8,
+      ),
+      FloatingActionButton(           
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateCollectibleScreen())
+          );
+        },
+        heroTag: null,           
+        child: const Icon(
+          Icons.add
+        ),
+      )
+    ]
+  )
+  );
   }
 }
 

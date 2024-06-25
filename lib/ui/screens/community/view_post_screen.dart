@@ -1,11 +1,10 @@
-
 import 'package:collectioneer/services/post_service.dart';
 import 'package:flutter/material.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:collectioneer/ui/screens/common/interactions_bottom_sheet.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
-import 'package:markdown_widget/widget/markdown.dart';
 
 import '../../../models/post.dart';
 
@@ -76,7 +75,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                           ),
                         ]),
                   ],
-                )),
+                )
+              ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 _showCommentBottomSheet(context);
@@ -89,7 +89,17 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
     );
   }
 
-  Widget buildMarkdown(String content) => MarkdownWidget(data: content);
+  Widget buildMarkdown(String content) {
+    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    return MarkdownBody(
+      data: content,
+      styleSheet: MarkdownStyleSheet(
+        p: TextStyle(
+          color: isDark ? Colors.white : Colors.black
+        )
+      ),
+      );
+  }
 
   void _exitInError(String error, BuildContext context) {
     Navigator.pop(context);

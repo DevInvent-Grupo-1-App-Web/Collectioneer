@@ -88,7 +88,7 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
           width: MediaQuery.of(context).size.width,
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: ChangeToAuctionBottomSheet(),
+          child: const ChangeToAuctionBottomSheet(),
         );
       },
     );
