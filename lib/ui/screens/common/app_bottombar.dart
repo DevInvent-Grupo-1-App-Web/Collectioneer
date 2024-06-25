@@ -1,5 +1,4 @@
 import 'package:collectioneer/ui/screens/account/profile_screen.dart';
-import 'package:collectioneer/ui/screens/communications/notifications_screen.dart';
 import 'package:collectioneer/ui/screens/communities_list_screen.dart';
 import 'package:collectioneer/ui/screens/community/community_feed_screen.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +27,7 @@ class _AppBottomBarState extends State<AppBottomBar> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CommunityFeedScreen()))
+                      builder: (context) => const CommunityFeedScreen()))
             },
             iconSize: 30.0,
           ),

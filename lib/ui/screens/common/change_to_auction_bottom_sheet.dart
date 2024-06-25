@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class ChangeToAuctionBottomSheet extends StatefulWidget {
-  ChangeToAuctionBottomSheet({
+  const ChangeToAuctionBottomSheet({
     super.key,
   });
 
@@ -19,8 +19,8 @@ class ChangeToAuctionBottomSheet extends StatefulWidget {
 
 class _ChangeToAuctionBottomSheetState
     extends State<ChangeToAuctionBottomSheet> {
-  TextEditingController _deadlineController = TextEditingController();
-  TextEditingController _initialPriceController = TextEditingController();
+  final TextEditingController _deadlineController = TextEditingController();
+  final TextEditingController _initialPriceController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _ChangeToAuctionBottomSheetState
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                   controller: _initialPriceController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
                         RegExp(r'^\d+\.?\d{0,2}')),
