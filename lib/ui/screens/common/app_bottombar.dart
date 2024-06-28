@@ -1,5 +1,4 @@
 import 'package:collectioneer/ui/screens/account/profile_screen.dart';
-import 'package:collectioneer/ui/screens/communications/notifications_screen.dart';
 import 'package:collectioneer/ui/screens/communities_list_screen.dart';
 import 'package:collectioneer/ui/screens/community/community_feed_screen.dart';
 import 'package:flutter/material.dart';
@@ -32,18 +31,18 @@ class _AppBottomBarState extends State<AppBottomBar> {
             },
             iconSize: 30.0,
           ),
-          IconButton(
-            icon: widget.selectedIndex == 1
-                ? const Icon(Icons.notifications)
-                : const Icon(Icons.notifications_outlined),
-            onPressed: () => {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const NotificationsScreen()))
-            },
-            iconSize: 30.0,
-          ),
+          // IconButton(
+          //   icon: widget.selectedIndex == 1
+          //       ? const Icon(Icons.notifications)
+          //       : const Icon(Icons.notifications_outlined),
+          //   onPressed: () => {
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //             builder: (context) => const NotificationsScreen()))
+          //   },
+          //   iconSize: 30.0,
+          // ),
           IconButton(
             icon: widget.selectedIndex == 2
                 ? const Icon(Icons.group)

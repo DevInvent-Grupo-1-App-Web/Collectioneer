@@ -34,21 +34,29 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Discard changes?"),
-          content: const Text("Are you sure you want to discard the changes?"),
+          title: Text("¿Descartar cambios?",
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  )),
+          content: Text(
+            "¿Quieres descartas los cambios que hiciste? No podrás recuperarlos.",
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text("Cancel"),
+              child: const Text("Cancelar"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: const Text("Discard"),
+              child: const Text("Descartar"),
             ),
           ],
         );
@@ -60,7 +68,7 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
     final CollectibleRequest request =
         _formKey.currentState!.getCollectibleRequest();
     var collectible = await _collectibleService.createCollectible(request);
-    UserPreferences().setCollectibleId(collectible.id);
+    UserPreferences().setActiveElement(collectible.id);
     return collectible;
   }
 
@@ -76,7 +84,7 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppTopBar(
-        title: "Create collectionable",
+        title: "Crear coleccionable",
         allowBack: true,
         onBack: showExitModal,
       ),
@@ -93,6 +101,15 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          if (_imageFile == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Por favor, selecciona una imagen."),
+              ),
+            );
+            return;
+          }
+
           var collectible = await postCollectible();
           String filename = path.basename(_imageFile!.path);
           postMedia(_imageFile!, collectible.id, filename);
@@ -134,13 +151,19 @@ class _CreateCollectibleFormState extends State<CreateCollectibleForm> {
       children: [
         CollectiblePictureSelector(onImagePicked: widget.onImagePicked),
         TextField(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
           controller: _titleController,
           decoration: const InputDecoration(
-            hintText: "Title",
+            hintText: "Nombre del coleccionable",
           ),
         ),
         const SizedBox(height: 8),
         TextField(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
           controller: _priceController,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [
@@ -153,11 +176,14 @@ class _CreateCollectibleFormState extends State<CreateCollectibleForm> {
         ),
         const SizedBox(height: 8),
         TextField(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
           controller: _descriptionController,
           maxLines: null,
           keyboardType: TextInputType.multiline,
           decoration: const InputDecoration(
-            hintText: "Description",
+            hintText: "Descriptción",
           ),
         ),
       ],
@@ -225,13 +251,13 @@ class _CollectiblePictureSelectorState
                     children: [
                       FilledButton.icon(
                         icon: const Icon(Icons.photo_camera),
-                        label: const Text("Take a photo"),
+                        label: const Text("Cámara"),
                         onPressed: _pickImageFromCamera,
                       ),
                       const SizedBox(height: 8),
                       FilledButton.tonalIcon(
                         icon: const Icon(Icons.photo_library),
-                        label: const Text("Choose from gallery"),
+                        label: const Text("Escoger de la galería"),
                         onPressed: _pickImageFromGallery,
                       ),
                     ],

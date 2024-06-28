@@ -1,7 +1,10 @@
+import 'package:collectioneer/models/feed_item.dart';
 import 'package:flutter/material.dart';
 
 class FeedFilterChips extends StatefulWidget {
-  const FeedFilterChips({super.key});
+  const FeedFilterChips({super.key, required this.setFeedItemType});
+  
+  final Function setFeedItemType;
 
   @override
   State<FeedFilterChips> createState() => _FeedFilterChipsState();
@@ -34,6 +37,25 @@ class _FeedFilterChipsState extends State<FeedFilterChips> {
                 onSelected: (selected) {
                   setState(() {
                     _selectedFilter = selected ? index : 0;
+                    switch (_selectedFilter) {
+                      case 0:
+                        widget.setFeedItemType(FeedItemType.any);
+                        break;
+                      case 1:
+                        widget.setFeedItemType(FeedItemType.collectible);
+                        break;
+                      case 2:
+                        widget.setFeedItemType(FeedItemType.post);
+                        break;
+                      case 3:
+                        widget.setFeedItemType(FeedItemType.auction);
+                        break;
+                      case 4:
+                        widget.setFeedItemType(FeedItemType.sale);
+                        break;
+                      default:
+                        widget.setFeedItemType(FeedItemType.any);
+                    }
                   });
                 },
               ),

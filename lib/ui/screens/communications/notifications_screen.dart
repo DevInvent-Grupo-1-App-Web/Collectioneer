@@ -8,11 +8,10 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: AppTopBar(title: "Notifications"),
+      appBar: AppTopBar(title: "Notificaciones"),
       body: Center(
         child: Text('Your content here'),
       ),
-      bottomNavigationBar: AppBottomBar(selectedIndex: 1),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
+import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 
 class CommunitiesListScreen extends StatelessWidget {
@@ -11,11 +12,10 @@ class CommunitiesListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {  
     return Scaffold(
-        appBar: const AppTopBar(title: "Communities"),
+        appBar: const AppTopBar(title: "Comunidades"),
         body: const Center(
           child: CommunityList(),
         ),
-        bottomNavigationBar: const AppBottomBar(selectedIndex: 2),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, '/add-community');
@@ -40,16 +40,37 @@ class _CommunityListState extends State<CommunityList> {
   List _filteredCommunities = [];
   final _communityService = CommunityService();
   final _searchController = TextEditingController();
+  // Añade una variable para la suscripción
+  late final VoidCallback _searchListener;
 
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa el listener y lo añade al controlador
+    _searchListener = _filterCommunities;
+    _searchController.addListener(_searchListener);
+    _loadCommunities(); // Carga todas las comunidades al inicio
+  }
 
-   void _loadCommunities([String query = '']) async {
+  @override
+  void dispose() {
+    // Cancela la suscripción al controlador antes de desechar el widget
+    _searchController.removeListener(_searchListener);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _loadCommunities([String query = '']) async {
     final communities = await _communityService.searchCommunities(query);
     final userCommunities = await _communityService.getUserCommunities();
-    setState(() {
-      _communities = communities;
-      _userCommunities = userCommunities;
-      _filteredCommunities = _communities;
-    });
+    // Verifica si el widget aún está montado antes de llamar a setState
+    if (mounted) {
+      setState(() {
+        _communities = communities;
+        _userCommunities = userCommunities;
+        _filteredCommunities = _communities;
+      });
+    }
   }
 
   bool _isUserInCommunity(String communityId) {
@@ -88,13 +109,6 @@ void _filterCommunities() {
   }
 }
 
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(_filterCommunities);
-    _loadCommunities(); // Carga todas las comunidades al inicio
-  }
-
 @override
 Widget build(BuildContext context) {
   return Column(
@@ -102,16 +116,19 @@ Widget build(BuildContext context) {
       Padding(
         padding: const EdgeInsets.all(20.0),
         child: TextField(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           controller: _searchController,
           decoration: const InputDecoration(
-            labelText: 'Search',
+            labelText: 'Buscar comunidades',
             suffixIcon: Icon(Icons.search),
           ),
         ),
       ),
       Expanded(
         child: _filteredCommunities.isEmpty
-            ? const Center(child: Text('No se encontraron comunidades'))
+            ? const Center(child: CircularProgressIndicator.adaptive())
             : ListView.builder(
                 itemCount: _filteredCommunities.length,
                 itemBuilder: (context, index) {
@@ -126,11 +143,16 @@ Widget build(BuildContext context) {
                           alignment: Alignment.centerRight,
                           child: FilledButton(
                             onPressed: _isUserInCommunity(_filteredCommunities[index].id.toString())
-                                ? null
+                                ? () {
+                                  UserPreferences().setLatestActiveCommunity(_filteredCommunities[index].id);
+                                  Navigator.pushNamed(context, '/home');
+                                }
                                 : () {
                                     _joinCommunity(_filteredCommunities[index].id.toString());
+                                    UserPreferences().setLatestActiveCommunity(_filteredCommunities[index].id);
+                                    Navigator.pushNamed(context, '/home');
                                   },
-                            child: const Text('Join'),
+                            child: const Text('Entrar'),
                           ),
                         )
                       ],

@@ -44,17 +44,25 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Text(
               'Iniciar sesión',
-              style: Theme.of(context).textTheme.displaySmall,
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             Column(
               children: [
                 TextFormField(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   controller: _usernameController,
                   decoration: const InputDecoration(
                       labelText: 'Nombre de usuario', filled: true),
                 ),
                 const SizedBox(height: 36.0),
                 TextFormField(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   controller: _passwordController,
                   obscureText: !isPasswordVisible, // Use isPasswordVisible here
                   decoration: InputDecoration(

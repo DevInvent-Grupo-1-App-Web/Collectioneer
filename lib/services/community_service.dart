@@ -142,17 +142,8 @@ Future<List<Community>> searchCommunities(String query) async {
 }
 
   Future<List<FeedItem>> getCommunityFeed() async {
-    final int communityId = UserPreferences().getLatestActiveCommunity() ?? 0;
-    const int maxAmount = -1;
-    const int offset = 0;
-
     final response = await http.get(
-      Uri.parse('$baseUrl/collectibles')
-          .replace(queryParameters: <String, String>{
-        'CommunityId': communityId.toString(),
-        'MaxAmount': maxAmount.toString(),
-        'Offset': offset.toString(),
-      }),
+      Uri.parse('$baseUrl/${UserPreferences().getLatestActiveCommunity()}/feed'),
       headers: <String, String>{
         'Accept': 'application/json',
         'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
@@ -162,11 +153,32 @@ Future<List<Community>> searchCommunities(String query) async {
     if (response.statusCode != 200) {
       throw Exception(response.body);
     }
+    
+    log(response.body.toString());
 
     final List<dynamic> body = jsonDecode(response.body);
     final List<FeedItem> feedItems =
         body.map((dynamic item) => FeedItem.fromJson(item)).toList();
     log("Feed items: ${feedItems.length}");
     return feedItems;
+  }
+
+  Future<List<FeedItem>> searchInCommunity(String query) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/community/${UserPreferences().getLatestActiveCommunity()}/search?query=$query'),
+      headers: <String, String>{
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+      },
+    );
+
+    if (response.statusCode > 299) {
+      log('$baseUrl/community/${UserPreferences().getLatestActiveCommunity()}/search&query=$query');
+      log('Failed to search in community: ${response.body}');
+      throw Exception(response.body);
+    }
+
+    final List<dynamic> body = jsonDecode(response.body);
+    return body.map((dynamic item) => FeedItem.fromJson(item)).toList();
   }
 }

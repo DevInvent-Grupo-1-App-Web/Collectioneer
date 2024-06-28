@@ -45,25 +45,36 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
       ), 
       body: Padding(
         padding: const EdgeInsets.all(22.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: ListView(
           children: [
             const CommunityPictureSelector(
               key: Key('community_picture_selector'),
 
             ),
+            const SizedBox(height: 36.0),
             Column(
               children: [
                 TextFormField(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   controller: _communityNameController,
                   decoration:
                       const InputDecoration(labelText: 'Nombre de la Comunidad', filled: true),
                 ),
                 const SizedBox(height: 36.0),
                 TextFormField(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  minLines: 5,
+                  maxLines: null,
                   controller: _communityDescriptionController,
                   decoration: const InputDecoration(
-                      labelText: 'Descripción de la Comunidad', filled: true),
+                    labelText: 'Descripción de la Comunidad', 
+                    filled: true,
+                    alignLabelWithHint: true, // Aligns the label with the top line
+                  ),
                 ),
                 const SizedBox(height: 36.0),
                 FilledButton(

@@ -9,15 +9,9 @@ class SplashScreen extends StatelessWidget {
     UserPreferences prefs = UserPreferences();
 
     bool hasUserToken = prefs.hasUserToken();
-    int? latestActiveCommunity = prefs.getLatestActiveCommunity();
-    List<int> userCommunities = prefs.getUserCommunities();
 
     if (hasUserToken) {
-      if (latestActiveCommunity != null) {
-        return AppRoutes.home;
-      } else if (userCommunities.isEmpty) {
         return AppRoutes.communities;
-      }
     }
 
     return AppRoutes.login;
@@ -32,12 +26,12 @@ class SplashScreen extends StatelessWidget {
 
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: const Color(0xFF8C4E28),
         body: Center(
           child: Text(
             'Collectioneer',
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: Colors.white
                 ),
           ),
         )
