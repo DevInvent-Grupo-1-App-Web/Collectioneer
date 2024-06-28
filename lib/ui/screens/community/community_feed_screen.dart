@@ -9,6 +9,7 @@ import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart'
 import 'package:collectioneer/ui/screens/community/view_post_screen.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CommunityFeedScreen extends StatefulWidget {
   const CommunityFeedScreen({super.key});
@@ -80,41 +81,36 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
             }
           },
         ),
-        bottomNavigationBar: const AppBottomBar(selectedIndex: 0),
         floatingActionButton: Column(
-    mainAxisAlignment: MainAxisAlignment.end,
-    crossAxisAlignment: CrossAxisAlignment.end,
-    children: [
-      FloatingActionButton.small(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CreatePostScreen()),
-          );
-        },
-        heroTag: null,
-        child: const Icon(
-          Icons.post_add
-        ),
-      ),
-      const SizedBox(
-        height: 8,
-      ),
-      FloatingActionButton(           
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CreateCollectibleScreen())
-          );
-        },
-        heroTag: null,           
-        child: const Icon(
-          Icons.add
-        ),
-      )
-    ]
-  )
-  );
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              FloatingActionButton.small(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CreatePostScreen()),
+                  );
+                },
+                heroTag: null,
+                child: const Icon(Icons.post_add),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const CreateCollectibleScreen()));
+                },
+                heroTag: null,
+                child: const Icon(Icons.add),
+              )
+            ]));
   }
 }
 
@@ -131,6 +127,8 @@ class SearchInCommunity extends SearchDelegate {
     ];
   }
 
+  
+
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
@@ -144,51 +142,51 @@ class SearchInCommunity extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder(
-      future: CommunityService().searchInCommunity(query),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } 
-        if (snapshot.hasData) {
-          final List<FeedItem> feedItems = snapshot.data!;
-          return ListView.builder(
-            itemCount: feedItems.length,
-            itemBuilder: (context, index) {
-              final FeedItem feedItem = feedItems[index];
-              return ListTile(
-                title: Text(feedItem.title),
-                subtitle: Text(feedItem.description, maxLines: 1, 
-                overflow: TextOverflow.ellipsis),
-                onTap: () {
-                  UserPreferences().setActiveElement(feedItem.id);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
+        future: CommunityService().searchInCommunity(query),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (snapshot.hasData) {
+            final List<FeedItem> feedItems = snapshot.data!;
+            return ListView.builder(
+              itemCount: feedItems.length,
+              itemBuilder: (context, index) {
+                final FeedItem feedItem = feedItems[index];
+                return ListTile(
+                  title: Text(feedItem.title),
+                  subtitle: Text(feedItem.description,
+                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                  onTap: () {
+                    UserPreferences().setActiveElement(feedItem.id);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
                         if (feedItem.itemType == FeedItemType.post) {
                           return const ViewPostScreen();
                         }
-                          return const ViewCollectibleScreen();
-                        
-                      }
-                      ),
+                        return const ViewCollectibleScreen();
+                      }),
                     );
-                }
-                    ,
-                  );
-                },
-              );
-            }
-            
-            return const Center(child: CircularProgressIndicator());
-            }
-          );
-      }
-      
+                  },
+                );
+              },
+            );
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        });
+  }
+
   @override
   Widget buildSuggestions(BuildContext context) {
-    return const Center(child: Text('Search for something'));
+    return Center(
+        child: Text(
+      'Busca algo...',
+      style: Theme.of(context)
+          .textTheme
+          .bodyLarge
+          ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+    ));
   }
 }
-
-
