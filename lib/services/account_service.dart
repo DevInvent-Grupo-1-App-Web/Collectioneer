@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:collectioneer/models/user.dart';
 import 'package:collectioneer/services/base_service.dart';
 import 'package:collectioneer/user_preferences.dart';

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collectioneer/models/auction.dart';
 import 'package:collectioneer/services/auction_service.dart';
 import 'package:flutter/material.dart';

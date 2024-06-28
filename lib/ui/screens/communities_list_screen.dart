@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:collectioneer/services/community_service.dart';
-import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';

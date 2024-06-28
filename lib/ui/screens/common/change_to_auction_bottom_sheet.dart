@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collectioneer/services/auction_service.dart';
 import 'package:collectioneer/services/models/auction_request.dart';
 import 'package:collectioneer/user_preferences.dart';

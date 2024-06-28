@@ -1,6 +1,5 @@
 import 'package:collectioneer/database/app_database.dart';
 import 'package:collectioneer/models/element_type.dart';
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 class FavouritesDao {

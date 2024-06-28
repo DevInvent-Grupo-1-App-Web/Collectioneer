@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:collectioneer/routes/app_routes.dart';
 import 'package:collectioneer/services/account_service.dart';
 import 'package:flutter/material.dart';
@@ -102,6 +101,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         navigateTo(AppRoutes.home);
                       }
                     } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Inicio de sesión fallido: $e'),
+                        ),
+                      );
                     }
                   },
                   child: const Text('Iniciar sesión'),

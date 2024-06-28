@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:collectioneer/models/review.dart';
 import 'package:collectioneer/services/base_service.dart';
 import 'package:collectioneer/services/models/review_request.dart';
