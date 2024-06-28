@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 class AppDatabase {
   final int version = 1;
   final String databaseName = 'collectioneer.db';
-  final String tableName = "user_preferences";
+  final List<String> tablesName = ['posts', 'favourites'];
 
   Database? _db;
 
@@ -13,11 +13,19 @@ class AppDatabase {
       join(await getDatabasesPath(), databaseName),
       onCreate: (db, version) {
         String query = """
-          CREATE TABLE $tableName (
+          CREATE TABLE ${tablesName[0]} (
             id INTEGER PRIMARY KEY,
-            user_token TEXT,
-            user_id INTEGER,
-            latest_active_community INTEGER
+            title TEXT,
+            content TEXT
+          )
+        """;
+        db.execute(query);
+
+        query = """
+          CREATE TABLE ${tablesName[1]} (
+            id INTEGER PRIMARY KEY,
+            element_id INTEGER,
+            element_type TEXT
           )
         """;
         db.execute(query);
