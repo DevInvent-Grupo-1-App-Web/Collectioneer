@@ -45,7 +45,6 @@ class AuctionService extends BaseService {
     );
 
     if (response.statusCode > 299) {
-      log(response.statusCode.toString());
       throw Exception(response.body);
     }
 

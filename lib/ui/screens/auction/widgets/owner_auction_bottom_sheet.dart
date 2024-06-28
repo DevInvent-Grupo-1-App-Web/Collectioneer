@@ -30,7 +30,42 @@ class _OwnerAuctionBottomSheetState extends State<OwnerAuctionBottomSheet> {
             }
             widget.auction = snapshot.data!;
 
-            log('Auction: ${widget.auction.toString()}');
+            if (widget.auction.isFinished()) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceBright,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.transparent
+                          : Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, -4),
+                    )
+                  ],
+                ),
+                padding: const EdgeInsets.only(
+                    top: 24, left: 32, right: 32, bottom: 24),
+                width: MediaQuery.of(context).size.width,
+                child: Wrap(
+                  direction: Axis.vertical,
+                  children: [
+                    Text('Subasta finalizada',
+                        style: Theme.of(context).textTheme.titleLarge),
+                    Text(
+                        'Puja ganadora: \$ ${widget.auction.startingPrice.toStringAsFixed(2)}'),
+                    const SizedBox(height: 8.0),
+                    FilledButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Correo enviado')));
+                      },
+                      child: const Text("Enviar un correo al ganador"),
+                    )
+                  ],
+                ),
+              );
+            }
 
             return Container(
               decoration: BoxDecoration(

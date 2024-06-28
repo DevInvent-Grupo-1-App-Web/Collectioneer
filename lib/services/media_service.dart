@@ -34,11 +34,8 @@ class MediaService extends BaseService {
     );
 
     if (response.statusCode > 299) {
-      log(mediaPostRequest.toJson().toString());
       throw Exception('Failed to upload media: ${response.body}');
     }
-
-    log('Media uploaded successfully:${response.statusCode}');
   }
 
   Future<List<Media>> getCollectibleMedia(int collectibleId) async {

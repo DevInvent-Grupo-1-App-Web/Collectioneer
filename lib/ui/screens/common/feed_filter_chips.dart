@@ -16,7 +16,8 @@ class _FeedFilterChipsState extends State<FeedFilterChips> {
     "Coleccionables",
     "Posts",
     "Subastas",
-    "Ventas"
+    "Ventas",
+    "Guardados"
   ];
   int _selectedFilter = 0;
 
@@ -52,6 +53,9 @@ class _FeedFilterChipsState extends State<FeedFilterChips> {
                         break;
                       case 4:
                         widget.setFeedItemType(FeedItemType.sale);
+                        break;
+                      case 5:
+                        widget.setFeedItemType(FeedItemType.favourite);
                         break;
                       default:
                         widget.setFeedItemType(FeedItemType.any);

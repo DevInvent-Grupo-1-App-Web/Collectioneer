@@ -1,8 +1,7 @@
 import 'package:collectioneer/ui/screens/account/profile_screen.dart';
-import 'package:collectioneer/ui/screens/communications/notifications_screen.dart';
+import 'package:collectioneer/ui/screens/common/home_screen.dart';
 import 'package:collectioneer/ui/screens/communities_list_screen.dart';
 import 'package:collectioneer/ui/screens/community/create_community_screen.dart';
-import 'package:collectioneer/ui/screens/community/community_feed_screen.dart';
 import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
 import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
 import 'package:collectioneer/ui/screens/startup/change_password_screen.dart';
@@ -20,8 +19,7 @@ final Map<String, Widget Function(BuildContext)> routes = {
   AppRoutes.register: (context) => const RegisterScreen(),
   AppRoutes.forgotPassword: (context) => const ForgotPasswordScreen(),
   AppRoutes.changePassword: (context) => const ChangePasswordScreen(),
-  AppRoutes.home: (context) => const CommunityFeedScreen(),
-  AppRoutes.notifications: (context) => const NotificationsScreen(),
+  //AppRoutes.home: (context) => const CommunityFeedScreen(),
   AppRoutes.communities: (context) => const CommunitiesListScreen(),
   AppRoutes.account: (context) => const ProfileScreen(),
   AppRoutes.createCollectible: (context) => const CreateCollectibleScreen(),
@@ -29,6 +27,7 @@ final Map<String, Widget Function(BuildContext)> routes = {
   AppRoutes.community: (context) => const CreateCommunityScreen(),
   AppRoutes.collectible: (context) => const ConvertAnAuctionScreen(),
   AppRoutes.auction: (context) => const AuctionParticipationScreen(),
+  AppRoutes.home: (context) => const HomeScreen(),
 };
 
 class AppRoutes {

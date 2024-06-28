@@ -86,7 +86,11 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                         }
                       }
                     } catch (e) {
-                      log('Creación de comunidad fallida: $e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Failed to create community: $e'),
+                        ),
+                      );
                     }
                   },
                   child: const Text('Crear Comunidad'),

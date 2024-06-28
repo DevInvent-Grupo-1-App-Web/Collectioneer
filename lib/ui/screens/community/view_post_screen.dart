@@ -1,8 +1,11 @@
+import 'package:collectioneer/dao/favourites_dao.dart';
+import 'package:collectioneer/models/element_type.dart';
 import 'package:collectioneer/services/post_service.dart';
 import 'package:flutter/material.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:collectioneer/ui/screens/common/interactions_bottom_sheet.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 
 import '../../../models/post.dart';
@@ -18,6 +21,17 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
   final int postId = UserPreferences().getActiveElement();
   late Post post;
   bool isLoading = true;
+  late bool isFavourite = false;
+
+  void _checkFavourite() async {
+    isFavourite = await FavouritesDao().isFavourite(postId, ElementType.post);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFavourite();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +56,37 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
           post = snapshot.data!;
 
           return Scaffold(
-            appBar: AppTopBar(title: post.title, allowBack: true),
+            appBar: AppTopBar(
+              title: post.title, 
+              allowBack: true,
+              actions: [
+                IconButton(
+                  onPressed: () async
+                  {
+                    if (isFavourite) {
+                      await FavouritesDao().removeFavourite(postId, ElementType.post);
+                    } else {
+                      await FavouritesDao().addFavourite(postId, ElementType.post);
+                    }
+                    setState(() {
+                      isFavourite = !isFavourite;
+                    });
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(isFavourite ? "Añadido a guardados" : "Eliminado de guardados"),
+                        duration: const Duration(seconds: 2),
+                      )
+                    );
+                  }
+                , icon: Icon(isFavourite ? Icons.bookmark : Icons.bookmark_add_outlined)
+                )
+              ],),
             body: Padding(
                 padding: const EdgeInsets.all(32),
                 child: ListView(
                   children: [
-                    Text(
-                      post.content,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface),
-                      softWrap: true,
-                    ),
+                    buildMarkdown(post.content),
                     const Divider(height: 16),
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,6 +126,15 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
     );
   }
 
+  Widget buildMarkdown(String content) {
+    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    return MarkdownBody(
+      data: content,
+      styleSheet: MarkdownStyleSheet(
+          p: TextStyle(color: isDark ? Colors.white : Colors.black)),
+    );
+  }
+
   void _exitInError(String error, BuildContext context) {
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -112,7 +155,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
             constraints: BoxConstraints(maxHeight: maxHeight),
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: const CommentsBottomSheet());
+            child: const InteractionBottomSheet(type: ElementType.post));
       },
     );
   }

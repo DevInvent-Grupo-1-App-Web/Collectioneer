@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class Auction {
   final int id;
   final int communityId;
@@ -32,6 +34,11 @@ class Auction {
     createdAt: DateTime.parse(json['createdAt']),
     updatedAt: DateTime.parse(json['updatedAt']),
   );
+
+  bool isFinished() {
+    log("Deadline: $deadline");
+    return deadline.isBefore(DateTime.now());
+  }
 
   String getRemainingTime() {
     final now = DateTime.now();

@@ -79,7 +79,6 @@ class AccountService extends BaseService {
     );
 
     if (response.statusCode != 200) {
-      log(response.body);
       throw Exception('Failed to send recovery email');
     }
   }
