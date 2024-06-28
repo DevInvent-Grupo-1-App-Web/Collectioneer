@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:collectioneer/models/media.dart';
 import 'package:collectioneer/services/models/media_post_request.dart';
 import 'package:http/http.dart' as http;

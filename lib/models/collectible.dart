@@ -41,6 +41,6 @@ class Collectible {
         exchangeId = json['exchangeId'],
         rating = (json['rating'] as num).toDouble(),
         reviewCount = json['reviewCount'],
-        createdAt = DateTime.parse(json['createdAt']),
-        updatedAt = json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null;
+        createdAt = DateTime.parse(json['createdAt']).toLocal(),
+        updatedAt = json['updatedAt'] != null ? DateTime.parse(json['updatedAt']).toLocal() : null;
 }

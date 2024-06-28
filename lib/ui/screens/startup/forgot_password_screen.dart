@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collectioneer/routes/app_routes.dart';
 import 'package:collectioneer/services/account_service.dart';
 import 'package:flutter/material.dart';

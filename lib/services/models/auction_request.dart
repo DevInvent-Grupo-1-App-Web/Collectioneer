@@ -19,7 +19,7 @@ class AuctionRequest {
       'auctioneerId': auctioneerId,
       'collectibleId': collectibleId,
       'startingPrice': startingPrice,
-      'deadline': deadline.toIso8601String(),
+      'deadline': deadline.toUtc().toIso8601String(),
     };
   }
 }

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:collectioneer/dao/post_dao.dart';
 import 'package:collectioneer/services/models/post_request.dart';
 import 'package:collectioneer/services/post_service.dart';
 import 'package:collectioneer/user_preferences.dart';
@@ -14,27 +17,72 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   final TextEditingController postTitle = TextEditingController();
   final TextEditingController postContent = TextEditingController();
 
+  retrieveSavedPost() async {
+    var post = await PostDao().fetch();
+
+    if (post.isEmpty) {
+      return;
+    }
+
+    setState(() {
+      postTitle.text = post[0]['title'];
+      postContent.text = post[0]['content'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (postTitle.text.isEmpty && postContent.text.isEmpty) {
+      retrieveSavedPost();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Crear publicación"),
         leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              if (postContent.text.isNotEmpty && postTitle.text.isNotEmpty) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("¿Estás seguro de que quieres salir?"),
+                      content: const Text("Tu publicación no se guardará."),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Cancelar"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            
+                           PostDao().deleteAll();
+                            Navigator.pop(context);
+                            Navigator.pop(
+                                context);
+                          },
+                          child: const Text("Salir"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                Navigator.pop(context);
+              }
             },
             icon: const Icon(Icons.arrow_back)),
         actions: [
           IconButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Vista previa aún no disponible")));
-              },
-              icon: const Icon(Icons.preview_outlined)),
-          IconButton(
-            onPressed: () {
+            onPressed: () async {
+              await PostDao().insert(postTitle.text, postContent.text);
+
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Guardado local aún no disponible")));
+                  const SnackBar(content: Text("Publicación guardada")));
+
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.save),
           )
@@ -44,9 +92,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(children: [
           TextField(
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface
-            ),
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall
+                ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             controller: postTitle,
             maxLines: 1,
             decoration: const InputDecoration(
@@ -54,11 +103,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               border: InputBorder.none,
             ),
           ),
-          const Divider(height: 16.0,),
+          const Divider(
+            height: 16.0,
+          ),
           TextField(
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface
-            ),
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             controller: postContent,
             keyboardType: TextInputType.multiline,
             maxLines: null,
@@ -72,19 +124,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if(postTitle.text.isEmpty) {
-            ScaffoldMessenger.of(context)
-            .showSnackBar(
-              const SnackBar(content: Text("Incluye un título antes de enviar."),)
-            );
+          if (postTitle.text.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Incluye un título antes de enviar."),
+            ));
             return;
           }
 
           if (postContent.text.isEmpty) {
-            ScaffoldMessenger.of(context)
-            .showSnackBar(
-              const SnackBar(content: Text("No puedes compartir una publicación vacía."),)
-            );
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("No puedes compartir una publicación vacía."),
+            ));
             return;
           }
 
@@ -99,6 +149,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(content: Text("Post created")));
           });
+
+          PostDao().deleteAll();
         },
         child: const Icon(Icons.publish),
       ),

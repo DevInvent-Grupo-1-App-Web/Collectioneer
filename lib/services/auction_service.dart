@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:collectioneer/models/auction.dart';
 import 'package:collectioneer/models/bid.dart';
 import 'package:collectioneer/services/base_service.dart';

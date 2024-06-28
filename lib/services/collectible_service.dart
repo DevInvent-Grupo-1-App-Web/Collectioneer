@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:collectioneer/models/collectible.dart';
 import 'package:collectioneer/services/base_service.dart';
 import 'package:collectioneer/services/models/collectible_request.dart';

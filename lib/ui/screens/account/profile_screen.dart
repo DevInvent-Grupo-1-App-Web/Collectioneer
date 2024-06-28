@@ -1,6 +1,5 @@
 import 'package:collectioneer/models/user.dart';
 import 'package:collectioneer/services/account_service.dart';
-import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/ui/screens/startup/forgot_password_screen.dart';
 import 'package:collectioneer/ui/screens/startup/splash_screen.dart';
@@ -69,11 +68,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      FilledButton(
-                          onPressed: () {}, child: const Text("Editar perfil")),
-                      FilledButton.tonal(
-                          onPressed: () {},
-                          child: const Text("Mis coleccionables")),
+                      // FilledButton(
+                      //     onPressed: () {}, child: const Text("Editar perfil")),
+                      // FilledButton.tonal(
+                      //     onPressed: () {},
+                      //     child: const Text("Mis coleccionables")),
                     ],
                   ),
                   Column(

@@ -72,6 +72,10 @@ class _PostTileState extends State<PostTile>
   }
 
   String timeAgo(DateTime time) {
+    // return formatted as YYYY-MM-DD HH:MM:SS
+    //return time.toString();
+
+
     final now = DateTime.now();
     final difference = now.difference(time);
     if (difference.inDays > 365) {
