@@ -1,3 +1,4 @@
+import 'package:collectioneer/models/element_type.dart';
 import 'package:collectioneer/ui/screens/auction/widgets/owner_auction_bottom_sheet.dart';
 import 'package:collectioneer/ui/screens/common/async_media_display.dart';
 import 'package:collectioneer/ui/screens/auction/widgets/bidder_auction_bottom_sheet.dart';
@@ -114,7 +115,7 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
             constraints: BoxConstraints(maxHeight: maxHeight),
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: const CommentsBottomSheet());
+            child: const InteractionBottomSheet(type: ElementType.collectible));
       },
     );
   }

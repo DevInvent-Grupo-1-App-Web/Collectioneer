@@ -1,0 +1,4 @@
+enum ElementType {
+  collectible,
+  post
+}

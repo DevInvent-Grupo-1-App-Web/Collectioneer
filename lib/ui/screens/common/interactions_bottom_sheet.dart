@@ -1,300 +1,204 @@
+import 'package:collectioneer/models/comment.dart';
+import 'package:collectioneer/models/element_type.dart';
+import 'package:collectioneer/models/review.dart';
+import 'package:collectioneer/services/comment_service.dart';
+import 'package:collectioneer/services/models/comment_request.dart';
+import 'package:collectioneer/services/models/review_request.dart';
+import 'package:collectioneer/services/review_service.dart';
+import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
 
-class CommentsBottomSheet extends StatefulWidget {
-
-  const CommentsBottomSheet({
-    super.key
-  });
+class InteractionBottomSheet extends StatefulWidget {
+  const InteractionBottomSheet({super.key, required this.type});
+  final ElementType type;
 
   @override
-  _CommentsBottomSheetState createState() => _CommentsBottomSheetState();
+  _InteractionBottomSheetState createState() => _InteractionBottomSheetState();
 }
 
-class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
-  late int _selectedIndex;
-  late PageController _pageController;
-  final TextEditingController _commentController = TextEditingController();
-  final TextEditingController _reviewController = TextEditingController();
-  int _rating = 0;
+class _InteractionBottomSheetState extends State<InteractionBottomSheet> {
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.type == ElementType.collectible ? 
+    DoubleInteraction(type: widget.type) : CommentScreen(type: widget.type);
+  }
+}
+
+class CommentScreen extends StatefulWidget {
+  const CommentScreen({super.key, required this.type});
+  final ElementType type;
+
+  @override
+  State<CommentScreen> createState() => _CommentScreenState();
+}
+
+class _CommentScreenState extends State<CommentScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: CommentsList(type: widget.type,),
+          ),
+          CommentInput(type: widget.type,),
+        ],
+      ),
+    );
+  }
+}
+
+class CommentInput extends StatefulWidget {
+  const CommentInput({super.key, required this.type});
+  final ElementType type;
+
+  @override
+  State<CommentInput> createState() => _CommentInputState();
+}
+
+class _CommentInputState extends State<CommentInput> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            decoration: const InputDecoration(
+              hintText: 'Escribe un comentario...',
+            ),
+            controller: _controller,
+          ),
+        ),
+        const SizedBox(width: 8,),
+        IconButton(
+          icon: const Icon(Icons.send),
+          onPressed: () async {
+            if (_controller.text.isNotEmpty) {
+              final comment = CommentRequest(
+                authorId: UserPreferences().getUserId(),
+                content: _controller.text,
+              );
+              
+              if (widget.type == ElementType.collectible) {
+                await CommentService().postCollectibleComment(UserPreferences().getActiveElement() ,comment);
+              } else {
+                await CommentService().postPostComment(UserPreferences().getActiveElement() ,comment);
+              }
+
+              _controller.clear();
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class DoubleInteraction extends StatefulWidget {
+  const DoubleInteraction({super.key, required this.type});
+  final ElementType type;
+
+  @override
+  State<DoubleInteraction> createState() => _DoubleInteractionState();
+}
+
+class _DoubleInteractionState extends State<DoubleInteraction> with TickerProviderStateMixin {
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = 0;
-    _pageController = PageController(initialPage: _selectedIndex);
+    _tabController = TabController(initialIndex: 0, vsync: this, length: 2);
   }
 
   @override
   void dispose() {
-    _commentController.dispose();
-    _reviewController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
-        BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.comment),
-              label: 'Comentarios',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.star),
-              label: 'Reseñas',
-            ),
+        TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Comentarios'),
+            Tab(text: 'Reseñas'),
           ],
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-              _pageController.animateToPage(
-                index,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            });
-          },
         ),
         Expanded(
-          child: PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-            children: const [
-              CommentsList(),
-              ReviewsList(),
-            ],
-          ),
-        ),
-        if (_selectedIndex == 0) _buildCommentForm(),
-        if (_selectedIndex == 1) _buildReviewForm(),
-      ],
-    );
-  }
-
-  Widget _buildCommentForm() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
+          child: TabBarView(
+            controller: _tabController,
             children: [
-              const CircleAvatar(
-                backgroundImage: NetworkImage('URL_de_la_imagen'),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: _commentController,
-                      maxLength: 50,
-                      decoration: const InputDecoration(
-                        hintText: 'Agregar comentario...',
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: () => _addComment('Nombre de Usuario'),
-              ),
+              CommentScreen(type: widget.type),
+              ReviewScreen()
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildReviewForm() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              const CircleAvatar(
-                backgroundImage: NetworkImage('URL_de_la_imagen'),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: _reviewController,
-                      maxLength: 300,
-                      decoration: const InputDecoration(
-                        hintText: 'Agregar reseña...',
-                        border: InputBorder.none,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildRatingStars(),
-                  ],
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: () => _addReview('Nombre de Usuario'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRatingStars() {
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () => _setRating(1),
-          icon: Icon(_rating >= 1 ? Icons.star : Icons.star_border),
-          color: _rating >= 1 ? Colors.yellow : null,
-        ),
-        IconButton(
-          onPressed: () => _setRating(2),
-          icon: Icon(_rating >= 2 ? Icons.star : Icons.star_border),
-          color: _rating >= 2 ? Colors.yellow : null,
-        ),
-        IconButton(
-          onPressed: () => _setRating(3),
-          icon: Icon(_rating >= 3 ? Icons.star : Icons.star_border),
-          color: _rating >= 3 ? Colors.yellow : null,
-        ),
-        IconButton(
-          onPressed: () => _setRating(4),
-          icon: Icon(_rating >= 4 ? Icons.star : Icons.star_border),
-          color: _rating >= 4 ? Colors.yellow : null,
-        ),
-        IconButton(
-          onPressed: () => _setRating(5),
-          icon: Icon(_rating >= 5 ? Icons.star : Icons.star_border),
-          color: _rating >= 5 ? Colors.yellow : null,
         ),
       ],
     );
-  }
-
-  void _setRating(int rating) {
-    setState(() {
-      _rating = rating;
-    });
-  }
-
-  void _addComment(String username) {
-    final String commentText = _commentController.text.trim();
-    if (commentText.isNotEmpty) {
-      setState(() {
-        /*
-        comments.add({
-          'text': commentText,
-          'image': 'URL_de_la_imagen',
-          'username': username,
-        });
-         */
-        _commentController.clear();
-      });
-      FocusScope.of(context).unfocus(); // Ocultar el teclado
-    }
-  }
-
-  void _addReview(String username) {
-    final String reviewText = _reviewController.text.trim();
-    if (reviewText.isNotEmpty && _rating > 0) {
-      setState(() {
-        /*
-        widget.reviews.add({
-          'text': reviewText,
-          'image': 'URL_de_la_imagen',
-          'username': username,
-          'rating': _rating,
-        });
-         */
-        _reviewController.clear();
-        _rating = 0; // Restablecer la calificación después de agregar la reseña
-      });
-      FocusScope.of(context).unfocus(); // Ocultar el teclado
-    }
   }
 }
 
 class CommentsList extends StatefulWidget {
-
-  const CommentsList({super.key});
+  const CommentsList({super.key, required this.type});
+  final ElementType type;
 
   @override
   State<CommentsList> createState() => _CommentsListState();
 }
 
 class _CommentsListState extends State<CommentsList> {
-  List<Map<String, String>> comments = List.empty();
+  late List<Comment> comments;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: comments.length,
-      itemBuilder: (context, index) {
-        final comment = comments[index];
-        return Card(
-          elevation: 4,
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(comment['image']!),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
+    return FutureBuilder(
+      future: widget.type == ElementType.collectible ? CommentService()
+          .getCollectibleComments(UserPreferences().getActiveElement()) : CommentService().getPostComments(UserPreferences().getActiveElement()),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          comments = snapshot.data as List<Comment>;
+          return ListView.builder(
+            itemCount: comments.length,
+            itemBuilder: (context, index) {
+              final comment = comments[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        comment['username']!,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        comment.authorName,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 4),
-                      Text(comment['text']!),
+                      const SizedBox(height: 8),
+                      Text(comment.body),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        );
+              );
+            },
+          );
+        }
       },
     );
   }
 }
 
 class ReviewsList extends StatefulWidget {
-
   const ReviewsList({super.key});
 
   @override
@@ -302,55 +206,142 @@ class ReviewsList extends StatefulWidget {
 }
 
 class _ReviewsListState extends State<ReviewsList> {
-  List<Map<String, dynamic>> reviews = List.empty();
-
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: reviews.length,
-      itemBuilder: (context, index) {
-        final review = reviews[index];
-        return Card(
-          elevation: 4,
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(review['image']),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      review['username'],
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(width: 12),
-                    _buildRatingStars(review['rating']),
-                  ],
+    return FutureBuilder(
+      future: ReviewService().getReviewsForCollectible(UserPreferences().getActiveElement()),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          final reviews = snapshot.data as List<Review>;
+          return ListView.builder(
+            itemCount: reviews.length,
+            itemBuilder: (context, index) {
+              final review = reviews[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        review.userId.toString(),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(review.content),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(5, (index) {
+                          if (index < review.rating) {
+                            return Icon(Icons.star, size: 16, color: Theme.of(context).colorScheme.primary);
+                          } else {
+                            return Icon(Icons.star_outline, size: 16, color: Theme.of(context).colorScheme.primary);
+                          }
+                        }),
+                      )
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Text(review['text']),
-              ],
-            ),
-          ),
-        );
+              );
+            },
+          );
+        }
+      
       },
     );
   }
+}
 
-  Widget _buildRatingStars(int rating) {
-    return Row(
-      children: List.generate(
-        5,
-        (index) => Icon(
-          index < rating ? Icons.star : Icons.star_border,
-          color: index < rating ? Colors.yellow : null,
-        ),
+class ReviewScreen extends StatefulWidget {
+  const ReviewScreen({super.key});
+
+  @override
+  State<ReviewScreen> createState() => _ReviewScreenState();
+}
+
+class _ReviewScreenState extends State<ReviewScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: ReviewsList(),
+          ),
+          ReviewInput(),
+        ],
       ),
+    );
+  }
+}
+
+class ReviewInput extends StatefulWidget {
+  const ReviewInput({super.key});
+
+  @override
+  State<ReviewInput> createState() => _ReviewInputState();
+}
+
+class _ReviewInputState extends State<ReviewInput> {
+  final TextEditingController _controller = TextEditingController();
+  int _rating = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(children:
+          List.generate(
+            5,
+            (index) => IconButton(
+              icon: Icon(index < _rating ? Icons.star : Icons.star_outline),
+              color: index < 5 ? Theme.of(context).colorScheme.primary : null,
+              onPressed: () {
+                setState(() {
+                  _rating = index + 1;
+                });
+              },
+            ),
+          )
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Escribe una reseña...',
+                ),
+                controller: _controller,
+              ),
+            ),
+            const SizedBox(width: 8,),
+            IconButton(
+              icon: const Icon(Icons.send),
+              onPressed: () async {
+                if (_controller.text.isNotEmpty) {
+                  final review = ReviewRequest(
+                    reviewerId: UserPreferences().getUserId(),
+                    collectibleId: UserPreferences().getActiveElement(),
+                    content: _controller.text,
+                    rating: _rating
+                  );
+                  
+                  await ReviewService().postReview(review);
+        
+                  _controller.clear();
+                }
+              },
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
