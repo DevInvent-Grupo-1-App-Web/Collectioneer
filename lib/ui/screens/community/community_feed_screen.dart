@@ -1,15 +1,19 @@
 import 'dart:developer';
+
+import 'package:collectioneer/dao/favourites_dao.dart';
+import 'package:collectioneer/models/element_type.dart';
 import 'package:collectioneer/models/feed_item.dart';
 import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
-import 'package:collectioneer/ui/screens/common/app_topbar.dart';
 import 'package:collectioneer/ui/screens/common/community_feed_list.dart';
 import 'package:collectioneer/ui/screens/common/feed_filter_chips.dart';
 import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
+import 'package:collectioneer/ui/screens/community/create_post_screen.dart';
 import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart';
 import 'package:collectioneer/ui/screens/community/view_post_screen.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CommunityFeedScreen extends StatefulWidget {
   const CommunityFeedScreen({super.key});
@@ -21,6 +25,20 @@ class CommunityFeedScreen extends StatefulWidget {
 class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   FeedItemType currentFeedItemType = FeedItemType.any;
   List<FeedItem> feedItems = [];
+  late List<FavouriteItem> favouriteElements;
+
+  fetchFavourites() async {
+    await FavouritesDao().getFavourites().then((value) {
+      setState(() {
+        favouriteElements = value;
+      });
+      log("Fetched favourites");
+      for (var element in favouriteElements) {
+        log(element.elementId);
+        log(element.elementType.toString());
+      }
+    });
+  }
 
   void setFeedItemType(FeedItemType feedItemType) {
     setState(() {
@@ -29,6 +47,16 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   }
 
   List<FeedItem> filterFeedItems(List<FeedItem> feedItems) {
+    if (currentFeedItemType == FeedItemType.favourite) {
+      feedItems = feedItems.where((element) {
+        return favouriteElements.any((favourite) =>
+            favourite.elementId == element.id.toString() &&
+            favourite.elementType == castElementType(element.itemType.toString()));
+      }).toList();
+
+      return feedItems;
+    }
+
     feedItems.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
     if (currentFeedItemType == FeedItemType.any) {
@@ -38,6 +66,12 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
           .where((element) => element.itemType == currentFeedItemType)
           .toList();
     }
+  }
+
+  @override
+  void initState() {
+    fetchFavourites();
+    super.initState();
   }
 
   @override
@@ -81,16 +115,40 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
             }
           },
         ),
-        bottomNavigationBar: const AppBottomBar(selectedIndex: 0),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CreateCollectibleScreen()));
-          },
-          child: const Icon(Icons.add),
-        ));
+        floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              FloatingActionButton.small(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CreatePostScreen()),
+                  );
+                },
+                heroTag: null,
+                child: const Icon(Icons.post_add),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              FloatingActionButton(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const CreateCollectibleScreen()));
+                },
+                heroTag: null,
+                child: const Icon(Icons.add),
+              )
+            ]));
   }
 }
 
@@ -120,51 +178,51 @@ class SearchInCommunity extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder(
-      future: CommunityService().searchInCommunity(query),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } 
-        if (snapshot.hasData) {
-          final List<FeedItem> feedItems = snapshot.data!;
-          return ListView.builder(
-            itemCount: feedItems.length,
-            itemBuilder: (context, index) {
-              final FeedItem feedItem = feedItems[index];
-              return ListTile(
-                title: Text(feedItem.title),
-                subtitle: Text(feedItem.description, maxLines: 1, 
-                overflow: TextOverflow.ellipsis),
-                onTap: () {
-                  UserPreferences().setActiveElement(feedItem.id);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
+        future: CommunityService().searchInCommunity(query),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (snapshot.hasData) {
+            final List<FeedItem> feedItems = snapshot.data!;
+            return ListView.builder(
+              itemCount: feedItems.length,
+              itemBuilder: (context, index) {
+                final FeedItem feedItem = feedItems[index];
+                return ListTile(
+                  title: Text(feedItem.title),
+                  subtitle: Text(feedItem.description,
+                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                  onTap: () {
+                    UserPreferences().setActiveElement(feedItem.id);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
                         if (feedItem.itemType == FeedItemType.post) {
                           return const ViewPostScreen();
                         }
-                          return const ViewCollectibleScreen();
-                        
-                      }
-                      ),
+                        return const ViewCollectibleScreen();
+                      }),
                     );
-                }
-                    ,
-                  );
-                },
-              );
-            }
-            
-            return const Center(child: CircularProgressIndicator());
-            }
-          );
-      }
-      
+                  },
+                );
+              },
+            );
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        });
+  }
+
   @override
   Widget buildSuggestions(BuildContext context) {
-    return const Center(child: Text('Search for something'));
+    return Center(
+        child: Text(
+      'Busca algo...',
+      style: Theme.of(context)
+          .textTheme
+          .bodyLarge
+          ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+    ));
   }
 }
-
-

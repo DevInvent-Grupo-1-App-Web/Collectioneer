@@ -56,5 +56,6 @@ enum FeedItemType {
   auction,
   sale,
   exchange,
-  any
+  any,
+  favourite
 }

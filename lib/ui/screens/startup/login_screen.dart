@@ -99,10 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () async {
                     try {
                       if (await _login()) {
-                        navigateTo(AppRoutes.communities);
+                        navigateTo(AppRoutes.home);
                       }
                     } catch (e) {
-                      log('Inicio de sesión fallido: $e');
                     }
                   },
                   child: const Text('Iniciar sesión'),

@@ -31,6 +31,29 @@ class _BidderAuctionBottomSheetState extends State<BidderAuctionBottomSheet> {
               return const Text('Sin datos disponibles.');
             }
             widget.auction = snapshot.data!;
+
+            if (widget.auction.isFinished()) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceBright,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.transparent
+                          : Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, -4),
+                    )
+                  ],
+                ),
+                padding: const EdgeInsets.only(
+                    top: 24, left: 32, right: 32, bottom: 24),
+                width: MediaQuery.of(context).size.width,
+                child: Text('Subasta finalizada', style: Theme.of(context).textTheme.titleLarge),
+              );
+            }
+
+
             return Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,

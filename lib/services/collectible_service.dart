@@ -50,18 +50,13 @@ class CollectibleService extends BaseService {
           'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
         },
       );
-      log('Response status: ${response.statusCode}');
-      log('Response body: ${response.body}');
 
       if (response.statusCode != 200) {
         throw Exception('Failed to load collectible: ${response.body}');
       }
-      log("Decoding collectible");
       Collectible collectible = Collectible.fromJson(jsonDecode(response.body));
-      log('Collectible loaded: ${collectible.name}');
       return collectible;
     } catch (e) {
-      log('Error on getCollectible: $e');
       rethrow;
     }
   }
