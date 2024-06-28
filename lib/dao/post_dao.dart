@@ -22,8 +22,8 @@ class PostDao {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  delete() async {
+  deleteAll() async {
     Database db = await AppDatabase().openDB();
-    db.delete(tableName, where: 'id = ?', whereArgs: [1]);
+    db.delete(tableName); // Removes the where clause to delete all rows
   }
 }
