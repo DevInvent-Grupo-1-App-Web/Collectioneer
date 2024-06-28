@@ -1,22 +1,22 @@
 class Comment {
   final int id;
   final String body;
-  final int parentId;
   final int authorId;
   final String authorName;
+  final String profileURI;
 
   Comment({
     required this.id,
     required this.body,
-    required this.parentId,
     required this.authorId,
     required this.authorName,
+    required this.profileURI,
   });
 
   Comment.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        body = json['body'],
-        parentId = json['parentId'],
-        authorId = json['authorId'],
-        authorName = json['authorName'];
+        authorId = json['userId'],
+        authorName = json['username'],
+        body = json['content'],
+        profileURI = json['profileURI'];
 }

@@ -1,3 +1,4 @@
+import 'package:collectioneer/models/element_type.dart';
 import 'package:collectioneer/services/post_service.dart';
 import 'package:flutter/material.dart';
 import 'package:collectioneer/ui/screens/common/app_topbar.dart';
@@ -75,8 +76,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                           ),
                         ]),
                   ],
-                )
-              ),
+                )),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 _showCommentBottomSheet(context);
@@ -94,11 +94,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
     return MarkdownBody(
       data: content,
       styleSheet: MarkdownStyleSheet(
-        p: TextStyle(
-          color: isDark ? Colors.white : Colors.black
-        )
-      ),
-      );
+          p: TextStyle(color: isDark ? Colors.white : Colors.black)),
+    );
   }
 
   void _exitInError(String error, BuildContext context) {
@@ -121,7 +118,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
             constraints: BoxConstraints(maxHeight: maxHeight),
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: const CommentsBottomSheet());
+            child: const InteractionBottomSheet(type: ElementType.post));
       },
     );
   }
