@@ -32,13 +32,13 @@ class CollectibleInfo extends StatelessWidget {
                 Icon(Icons.star, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
-                  "4.8",
+                  collectible.rating.toStringAsFixed(1),
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium!
                       .copyWith(color: Theme.of(context).colorScheme.onSurface),
                 ),
-                Text(" (126)",
+                Text(" (${collectible.reviewCount.toString()})",
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant)),
               ],
