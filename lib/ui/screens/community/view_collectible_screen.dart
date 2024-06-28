@@ -1,3 +1,4 @@
+import 'package:collectioneer/dao/favourites_dao.dart';
 import 'package:collectioneer/models/element_type.dart';
 import 'package:collectioneer/ui/screens/auction/widgets/owner_auction_bottom_sheet.dart';
 import 'package:collectioneer/ui/screens/common/async_media_display.dart';
@@ -22,6 +23,17 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
   final int collectibleId = UserPreferences().getActiveElement();
   late Collectible collectible;
   bool isLoading = true;
+  late bool isFavourite = false;
+
+  void _checkFavourite() async {
+    isFavourite = await FavouritesDao().isFavourite(collectibleId, ElementType.collectible);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFavourite();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +61,33 @@ class _ViewCollectibleScreenState extends State<ViewCollectibleScreen> {
           collectible = snapshot.data!;
 
           return Scaffold(
-            appBar: AppTopBar(title: _pageName(collectible), allowBack: true),
+            appBar: AppTopBar(
+              title: _pageName(collectible), 
+              allowBack: true,
+              actions: [
+                IconButton(
+                  onPressed: () async
+                  {
+                    if (isFavourite) {
+                      await FavouritesDao().removeFavourite(collectibleId, ElementType.collectible);
+                    } else {
+                      await FavouritesDao().addFavourite(collectibleId, ElementType.collectible);
+                    }
+                    setState(() {
+                      isFavourite = !isFavourite;
+                    });
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(isFavourite ? "Añadido a guardados" : "Eliminado de guardados"),
+                        duration: const Duration(seconds: 2),
+                      )
+                    );
+                  }
+                , icon: Icon(isFavourite ? Icons.bookmark : Icons.bookmark_add_outlined)
+                )
+              ],
+              ),
             body: Padding(
                 padding: const EdgeInsets.all(32),
                 child: ListView(

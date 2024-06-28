@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:collectioneer/ui/screens/account/profile_screen.dart';
-import 'package:collectioneer/ui/screens/communications/notifications_screen.dart';
 import 'package:collectioneer/ui/screens/communities_list_screen.dart';
 import 'package:collectioneer/ui/screens/community/community_feed_screen.dart';
 
@@ -15,7 +14,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _tabs = const [
     CommunityFeedScreen(),
-    NotificationsScreen(),
     CommunitiesListScreen(),
     ProfileScreen(),
   ];
@@ -25,22 +23,17 @@ class _HomeScreenState extends State<HomeScreen> {
     BottomNavigationBarItem(
     icon: Icon(Icons.home_outlined, size: 30.0),
     activeIcon: Icon(Icons.home, size: 30.0),
-    label: '', // Se establece una cadena vacía para ocultar el nombre
-  ),
-  BottomNavigationBarItem(
-    icon: Icon(Icons.notifications_outlined, size: 30.0),
-    activeIcon: Icon(Icons.notifications, size: 30.0),
-    label: '', // Se establece una cadena vacía para ocultar el nombre
+    label: '',
   ),
   BottomNavigationBarItem(
     icon: Icon(Icons.group_outlined, size: 30.0),
     activeIcon: Icon(Icons.group, size: 30.0),
-    label: '', // Se establece una cadena vacía para ocultar el nombre
+    label: '',
   ),
   BottomNavigationBarItem(
     icon: Icon(Icons.person_outline, size: 30.0),
     activeIcon: Icon(Icons.person, size: 30.0),
-    label: '', // Se establece una cadena vacía para ocultar el nombre
+    label: '',
   ),
   ];
 
