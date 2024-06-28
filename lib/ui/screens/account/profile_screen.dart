@@ -99,6 +99,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             );
                           },
                           child: const Text("Cerrar sesión")),
+                          TextButton(onPressed: () { 
+                            // Show modal dialog to confirm account deletion
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Eliminar cuenta"),
+                                  content: const Text("¿Estás seguro de que quieres eliminar tu cuenta?"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("Cancelar"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        //AccountService().deleteAccount(UserPreferences().getUserId());
+                                        UserPreferences().clearUserPreferences();
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => const SplashScreen())
+                                        );
+                                      },
+                                      child: const Text("Eliminar cuenta"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }, child: const Text("Eliminar cuenta")),
                     ],
                   ),
                 ],

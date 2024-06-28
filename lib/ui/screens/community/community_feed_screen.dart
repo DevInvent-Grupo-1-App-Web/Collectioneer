@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:collectioneer/dao/favourites_dao.dart';
+import 'package:collectioneer/models/element_type.dart';
 import 'package:collectioneer/models/feed_item.dart';
 import 'package:collectioneer/services/community_service.dart';
 import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
@@ -21,6 +25,20 @@ class CommunityFeedScreen extends StatefulWidget {
 class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   FeedItemType currentFeedItemType = FeedItemType.any;
   List<FeedItem> feedItems = [];
+  late List<FavouriteItem> favouriteElements;
+
+  fetchFavourites() async {
+    await FavouritesDao().getFavourites().then((value) {
+      setState(() {
+        favouriteElements = value;
+      });
+      log("Fetched favourites");
+      for (var element in favouriteElements) {
+        log(element.elementId);
+        log(element.elementType.toString());
+      }
+    });
+  }
 
   void setFeedItemType(FeedItemType feedItemType) {
     setState(() {
@@ -29,6 +47,16 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
   }
 
   List<FeedItem> filterFeedItems(List<FeedItem> feedItems) {
+    if (currentFeedItemType == FeedItemType.favourite) {
+      feedItems = feedItems.where((element) {
+        return favouriteElements.any((favourite) =>
+            favourite.elementId == element.id.toString() &&
+            favourite.elementType == castElementType(element.itemType.toString()));
+      }).toList();
+
+      return feedItems;
+    }
+
     feedItems.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
     if (currentFeedItemType == FeedItemType.any) {
@@ -38,6 +66,12 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
           .where((element) => element.itemType == currentFeedItemType)
           .toList();
     }
+  }
+
+  @override
+  void initState() {
+    fetchFavourites();
+    super.initState();
   }
 
   @override
@@ -126,8 +160,6 @@ class SearchInCommunity extends SearchDelegate {
       )
     ];
   }
-
-  
 
   @override
   Widget buildLeading(BuildContext context) {

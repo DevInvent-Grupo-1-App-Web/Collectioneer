@@ -1,5 +1,6 @@
 import 'package:collectioneer/database/app_database.dart';
 import 'package:collectioneer/models/element_type.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 class FavouritesDao {
@@ -32,4 +33,20 @@ class FavouritesDao {
     db.insert(tableName, {'element_id': elementId, 'element_type': elementType.toString()},
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
+
+  Future<List<FavouriteItem>> getFavourites() async {
+  Database db = await AppDatabase().openDB();
+  List<Map<String, dynamic>> result = await db.query(tableName);
+  return result.map((item) => FavouriteItem(
+    elementId: item['element_id'].toString(),
+    elementType: castElementType(item['element_type']),
+  )).toList();
+}
+}
+
+class FavouriteItem {
+  final String elementId;
+  final ElementType elementType;
+
+  FavouriteItem({required this.elementId, required this.elementType});
 }

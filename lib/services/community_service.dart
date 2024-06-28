@@ -27,8 +27,6 @@ class CommunityService extends BaseService {
       throw Exception(response.body);
     }
 
-    log("Communities found: ${response.body}");
-
     final List<dynamic> body = jsonDecode(response.body);
     return body.map((dynamic item) => Community.fromJson(item)).toList();
   }
@@ -153,13 +151,10 @@ Future<List<Community>> searchCommunities(String query) async {
     if (response.statusCode != 200) {
       throw Exception(response.body);
     }
-    
-    log(response.body.toString());
 
     final List<dynamic> body = jsonDecode(response.body);
     final List<FeedItem> feedItems =
         body.map((dynamic item) => FeedItem.fromJson(item)).toList();
-    log("Feed items: ${feedItems.length}");
     return feedItems;
   }
 
@@ -173,8 +168,6 @@ Future<List<Community>> searchCommunities(String query) async {
     );
 
     if (response.statusCode > 299) {
-      log('$baseUrl/community/${UserPreferences().getLatestActiveCommunity()}/search&query=$query');
-      log('Failed to search in community: ${response.body}');
       throw Exception(response.body);
     }
 

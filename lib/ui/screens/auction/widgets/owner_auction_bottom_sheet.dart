@@ -30,8 +30,6 @@ class _OwnerAuctionBottomSheetState extends State<OwnerAuctionBottomSheet> {
             }
             widget.auction = snapshot.data!;
 
-            log('Auction: ${widget.auction.toString()}');
-
             return Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surfaceBright,

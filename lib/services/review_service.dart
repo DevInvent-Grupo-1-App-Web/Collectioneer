@@ -9,16 +9,6 @@ import 'package:http/http.dart' as http;
 
 class ReviewService extends BaseService {
   Future<Review> postReview(ReviewRequest reviewRequest) async {
-    final req = (Uri.parse('$baseUrl/collectible/new-review'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
-      },
-      body: jsonEncode(reviewRequest.toJson()),
-    );
-
-    log(req.toString());
-
     final response = await http.post(
       Uri.parse('$baseUrl/collectible/new-review'),
       headers: <String, String>{
@@ -27,8 +17,6 @@ class ReviewService extends BaseService {
       },
       body: jsonEncode(reviewRequest.toJson()),
     );
-
-    log(response.body);
 
     if (response.statusCode != 200) {
       throw Exception(response.body);
@@ -51,7 +39,6 @@ class ReviewService extends BaseService {
     }
 
     final List<dynamic> body = jsonDecode(response.body);
-    log(body.toString());
 
     return body.map((dynamic item) => Review.fromJson(item)).toList();
 
