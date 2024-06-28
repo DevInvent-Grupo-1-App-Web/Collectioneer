@@ -120,6 +120,8 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               FloatingActionButton.small(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                foregroundColor: Theme.of(context).colorScheme.onSecondary,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -134,6 +136,8 @@ class _CommunityFeedScreenState extends State<CommunityFeedScreen> {
                 height: 8,
               ),
               FloatingActionButton(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 onPressed: () {
                   Navigator.push(
                       context,
