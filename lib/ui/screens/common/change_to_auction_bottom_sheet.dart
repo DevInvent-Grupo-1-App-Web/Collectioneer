@@ -45,7 +45,8 @@ class _ChangeToAuctionBottomSheetState
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                   controller: _initialPriceController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
                         RegExp(r'^\d+\.?\d{0,2}')),
@@ -111,8 +112,7 @@ class _ChangeToAuctionBottomSheetState
     DateTime? deadline;
     try {
       deadline = formatter.parse(_deadlineController.text);
-    } catch (e) {
-    }
+    } catch (e) {}
 
     final AuctionRequest request = AuctionRequest(
       communityId: UserPreferences().getLatestActiveCommunity()!,

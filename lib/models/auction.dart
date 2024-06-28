@@ -29,10 +29,10 @@ class Auction {
     auctioneerId: json['auctioneerId'],
     collectibleId: json['collectibleId'],
     startingPrice: json['startingPrice'],
-    deadline: DateTime.parse(json['deadline']),
+    deadline: DateTime.parse(json['deadline']).toLocal(),
     isOpen: json['isOpen'],
-    createdAt: DateTime.parse(json['createdAt']),
-    updatedAt: DateTime.parse(json['updatedAt']),
+    createdAt: DateTime.parse(json['createdAt']).toLocal(),
+    updatedAt: DateTime.parse(json['updatedAt']).toLocal(),
   );
 
   bool isFinished() {
