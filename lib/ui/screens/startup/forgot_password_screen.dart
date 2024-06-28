@@ -60,7 +60,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               navigateTo(AppRoutes.changePassword);
                             }
                           } catch (e) {
-                            log('Envío de correo de recuperación fallido: $e');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Error al enviar el correo de recuperación: $e'),
+                              ),
+                            );
                           }
                         },
                         child: const Text('Enviar correo de recuperación'),

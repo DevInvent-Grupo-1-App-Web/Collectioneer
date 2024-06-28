@@ -116,7 +116,6 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
           if (mounted) {
             Navigator.pop(context);
           }
-          log("Save collectible");
         },
         child: const Icon(Icons.save),
       ),

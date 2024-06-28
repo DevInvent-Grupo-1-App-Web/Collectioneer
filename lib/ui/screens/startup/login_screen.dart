@@ -102,7 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         navigateTo(AppRoutes.home);
                       }
                     } catch (e) {
-                      log('Inicio de sesión fallido: $e');
                     }
                   },
                   child: const Text('Iniciar sesión'),

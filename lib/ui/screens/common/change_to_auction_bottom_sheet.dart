@@ -112,7 +112,6 @@ class _ChangeToAuctionBottomSheetState
     try {
       deadline = formatter.parse(_deadlineController.text);
     } catch (e) {
-      log('Unable to parse date: ${_deadlineController.text}');
     }
 
     final AuctionRequest request = AuctionRequest(

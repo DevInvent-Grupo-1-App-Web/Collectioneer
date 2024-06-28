@@ -114,7 +114,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }
                       }
                     } catch (e) {
-                      log('Registro fallido: $e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Failed to register: $e'),
+                        ),
+                      );
                     }
                   },
                   child: const Text('Registrarse'),
