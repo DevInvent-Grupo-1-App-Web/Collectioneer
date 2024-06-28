@@ -68,11 +68,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      FilledButton(
-                          onPressed: () {}, child: const Text("Editar perfil")),
-                      FilledButton.tonal(
-                          onPressed: () {},
-                          child: const Text("Mis coleccionables")),
+                      // FilledButton(
+                      //     onPressed: () {}, child: const Text("Editar perfil")),
+                      // FilledButton.tonal(
+                      //     onPressed: () {},
+                      //     child: const Text("Mis coleccionables")),
                     ],
                   ),
                   Column(

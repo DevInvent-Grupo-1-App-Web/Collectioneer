@@ -20,8 +20,8 @@ class Post {
       id: json['id'],
       title: json['title'],
       content: json['content'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: DateTime.parse(json['createdAt']).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt']).toLocal(),
       authorId: json['authorId'],
     );
   }
