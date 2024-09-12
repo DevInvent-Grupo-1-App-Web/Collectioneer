@@ -51,47 +51,42 @@ class CommunityService extends BaseService {
     UserPreferences().setLatestActiveCommunity(communityId);
   }
 
-
-
   Future<void> joinCommunity(String communityId) async {
-  // Obtén las comunidades del usuario
-  final userCommunitiesResponse = await http.get(
-    Uri.parse('$baseUrl/communities/${UserPreferences().getUserId()}'),
-    headers: <String, String>{
-      'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
-    },
-  );
+    final userCommunitiesResponse = await http.get(
+      Uri.parse('$baseUrl/communities/${UserPreferences().getUserId()}'),
+      headers: <String, String>{
+        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+      },
+    );
 
-  if (userCommunitiesResponse.statusCode != 200) {
-    throw Exception('Failed to get user communities: ${userCommunitiesResponse.body}');
-  }
+    if (userCommunitiesResponse.statusCode != 200) {
+      throw Exception('Failed to get user communities: ${userCommunitiesResponse.body}');
+    }
 
-  final List<dynamic> userCommunities = jsonDecode(userCommunitiesResponse.body);
+    final List<dynamic> userCommunities = jsonDecode(userCommunitiesResponse.body);
 
-  // Verifica si el usuario ya está en la comunidad
-  for (var community in userCommunities) {
-    if (community['id'].toString() == communityId) {
-      throw Exception('User is already in this community');
+    for (var community in userCommunities) {
+      if (community['id'].toString() == communityId) {
+        throw Exception('User is already in this community');
+      }
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/join-community'),
+      headers: <String, String>{
+        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'communityId': communityId,
+        'userId': UserPreferences().getUserId(),
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to join community: ${response.body}');
     }
   }
-
-  // Si el usuario no está en la comunidad, únete a la comunidad
-  final response = await http.post(
-    Uri.parse('$baseUrl/join-community'),
-    headers: <String, String>{
-      'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode({
-      'communityId': communityId,
-      'userId': UserPreferences().getUserId(),
-    }),
-  );
-
-  if (response.statusCode != 200) {
-    throw Exception('Failed to join community: ${response.body}');
-  }
-}
 
   Future<List<Community>> getUserCommunities() async {
     final response = await http.get(
@@ -109,34 +104,33 @@ class CommunityService extends BaseService {
     return body.map((dynamic item) => Community.fromJson(item)).toList();
   }
   
-Future<List<Community>> searchCommunities(String query) async {
-  Uri uri;
-  // Si el término de búsqueda está vacío, ajusta la URI para obtener todas las comunidades
-  if (query.isEmpty) {
-    uri = Uri.parse('$baseUrl/communities');
-  } else {
-    uri = Uri.parse('$baseUrl/search/communities?SearchTerm=${Uri.encodeComponent(query)}');
-  }
-
-  try {
-    final response = await http.get(
-      uri,
-      headers: <String, String>{
-        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to search communities. Status code: ${response.statusCode}, Response: ${response.body}');
+  Future<List<Community>> searchCommunities(String query) async {
+    Uri uri;
+    if (query.isEmpty) {
+      uri = Uri.parse('$baseUrl/communities');
+    } else {
+      uri = Uri.parse('$baseUrl/search/communities?SearchTerm=${Uri.encodeComponent(query)}');
     }
 
-    final List<dynamic> body = jsonDecode(response.body);
-    return body.map((dynamic item) => Community.fromJson(item)).toList();
-  } catch (e) {
-    throw Exception('Failed to search communities due to: $e');
+    try {
+      final response = await http.get(
+        uri,
+        headers: <String, String>{
+          'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to search communities. Status code: ${response.statusCode}, Response: ${response.body}');
+      }
+
+      final List<dynamic> body = jsonDecode(response.body);
+      return body.map((dynamic item) => Community.fromJson(item)).toList();
+    } catch (e) {
+      throw Exception('Failed to search communities due to: $e');
+    }
   }
-}
 
   Future<List<FeedItem>> getCommunityFeed() async {
     final response = await http.get(
@@ -172,5 +166,18 @@ Future<List<Community>> searchCommunities(String query) async {
 
     final List<dynamic> body = jsonDecode(response.body);
     return body.map((dynamic item) => FeedItem.fromJson(item)).toList();
+  }
+
+  Future<void> deleteCommunity(String communityId) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/community/$communityId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer ${UserPreferences().getUserToken()}',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete community: ${response.body}');
+    }
   }
 }
