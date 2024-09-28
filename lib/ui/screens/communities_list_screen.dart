@@ -74,17 +74,6 @@ class _CommunityListState extends State<CommunityList> {
     return false;
   }
 
-  bool _isUserOwner(String communityId) {
-    // Implementa la lógica para verificar si el usuario es el propietario
-    // Esto es solo un ejemplo, ajusta según tu lógica de negocio
-    for (var community in _userCommunities) {
-      if (community.id.toString() == communityId && community.isOwner) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   void _joinCommunity(String communityId) async {
     try {
       await _communityService.joinCommunity(communityId);
@@ -106,60 +95,11 @@ class _CommunityListState extends State<CommunityList> {
     }
   }
 
-  void _deleteCommunity(String communityId) async {
-    try {
-      await _communityService.deleteCommunity(communityId);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Community deleted'),
-          ),
-        );
-        _loadCommunities();
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to delete community: $e'),
-          ),
-        );
-      }
-    }
-  }
-
   void _filterCommunities() {
     final query = _searchController.text;
     if (query.isNotEmpty) {
       _loadCommunities(query);
     }
-  }
-
-  void _showDeleteConfirmationDialog(String communityId) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmar eliminación'),
-          content: const Text('¿Estás seguro de que deseas eliminar esta comunidad?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Eliminar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _deleteCommunity(communityId);
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -191,14 +131,6 @@ class _CommunityListState extends State<CommunityList> {
                           ListTile(
                             title: Text(_filteredCommunities[index].name),
                             subtitle: Text(_filteredCommunities[index].description),
-                            trailing: _isUserOwner(_filteredCommunities[index].id.toString())
-                                ? IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      _showDeleteConfirmationDialog(_filteredCommunities[index].id.toString());
-                                    },
-                                  )
-                                : null,
                           ),
                           Align(
                             alignment: Alignment.centerRight,
