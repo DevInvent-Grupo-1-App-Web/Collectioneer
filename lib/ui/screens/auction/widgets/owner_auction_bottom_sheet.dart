@@ -3,6 +3,7 @@ import 'package:collectioneer/services/auction_service.dart';
 import 'package:flutter/material.dart';
 
 class OwnerAuctionBottomSheet extends StatefulWidget {
+  // ignore: prefer_const_constructors_in_immutables
   OwnerAuctionBottomSheet({super.key, required this.auctionId});
   final int auctionId;
   late final Auction auction;

@@ -4,6 +4,7 @@ class AuctionParticipationScreen extends StatefulWidget {
   const AuctionParticipationScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AuctionParticipationScreenState createState() =>
       _AuctionParticipationScreenState();
 }

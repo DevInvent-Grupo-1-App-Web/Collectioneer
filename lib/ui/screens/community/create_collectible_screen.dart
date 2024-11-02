@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:collectioneer/models/collectible.dart';
 import 'package:collectioneer/services/collectible_service.dart';
@@ -114,6 +113,7 @@ class _CreateCollectibleScreenState extends State<CreateCollectibleScreen> {
           String filename = path.basename(_imageFile!.path);
           postMedia(_imageFile!, collectible.id, filename);
           if (mounted) {
+            // ignore: use_build_context_synchronously
             Navigator.pop(context);
           }
         },

@@ -4,6 +4,7 @@ class ConvertAnAuctionScreen extends StatefulWidget {
   const ConvertAnAuctionScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ConvertAnAuctionScreenState createState() =>
       _ConvertAnAuctionScreenState();
 }

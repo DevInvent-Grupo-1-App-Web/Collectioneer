@@ -63,6 +63,7 @@ class _ChangeToAuctionBottomSheetState
                     );
                     if (pickedDate != null) {
                       final TimeOfDay? pickedTime = await showTimePicker(
+                        // ignore: use_build_context_synchronously
                         context: context,
                         initialTime: TimeOfDay.now(),
                       );
@@ -110,7 +111,14 @@ class _ChangeToAuctionBottomSheetState
     DateTime? deadline;
     try {
       deadline = formatter.parse(_deadlineController.text);
-    } catch (e) {}
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Por favor, ingrese una fecha válida.'),
+        ),
+      );
+      return;
+    }
 
     final AuctionRequest request = AuctionRequest(
       communityId: UserPreferences().getLatestActiveCommunity()!,

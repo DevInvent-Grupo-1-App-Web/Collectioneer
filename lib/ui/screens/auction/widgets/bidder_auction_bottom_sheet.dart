@@ -3,6 +3,7 @@ import 'package:collectioneer/services/auction_service.dart';
 import 'package:collectioneer/services/models/bid_request.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class BidderAuctionBottomSheet extends StatefulWidget {
   BidderAuctionBottomSheet({super.key, required this.auctionId});
   final int auctionId;
