@@ -21,6 +21,7 @@ class _CollectibleTileState extends State<CollectibleTile>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return GestureDetector(
       onTap: () {
         UserPreferences().setActiveElement(widget.sourceItem.id);
