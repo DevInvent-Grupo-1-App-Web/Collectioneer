@@ -37,7 +37,6 @@ class AccountService extends BaseService {
 
     UserPreferences().setUserToken(token);
     UserPreferences().setUserId(body['userId']);
-    // TODO: Fetch user communities
   }
 
   Future<void> register(
