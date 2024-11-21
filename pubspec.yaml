@@ -33,4 +33,6 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icon/LOGO COLLECTIONER 2.png"
+  image_path: "assets/icons/logo.png"
+  adaptive_icon_background: "#c77c4f"
+  adaptive_icon_foreground: "assets/icons/logo_foreground.png"
