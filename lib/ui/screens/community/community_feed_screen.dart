@@ -4,7 +4,6 @@ import 'package:collectioneer/dao/favourites_dao.dart';
 import 'package:collectioneer/models/element_type.dart';
 import 'package:collectioneer/models/feed_item.dart';
 import 'package:collectioneer/services/community_service.dart';
-import 'package:collectioneer/ui/screens/common/app_bottombar.dart';
 import 'package:collectioneer/ui/screens/common/community_feed_list.dart';
 import 'package:collectioneer/ui/screens/common/feed_filter_chips.dart';
 import 'package:collectioneer/ui/screens/community/create_collectible_screen.dart';
@@ -13,7 +12,6 @@ import 'package:collectioneer/ui/screens/community/view_collectible_screen.dart'
 import 'package:collectioneer/ui/screens/community/view_post_screen.dart';
 import 'package:collectioneer/user_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CommunityFeedScreen extends StatefulWidget {
   const CommunityFeedScreen({super.key});

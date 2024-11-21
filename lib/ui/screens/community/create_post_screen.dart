@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collectioneer/dao/post_dao.dart';
 import 'package:collectioneer/services/models/post_request.dart';
 import 'package:collectioneer/services/post_service.dart';
@@ -79,9 +77,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             onPressed: () async {
               await PostDao().insert(postTitle.text, postContent.text);
 
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Publicación guardada")));
 
+              // ignore: use_build_context_synchronously
               Navigator.pop(context);
             },
             icon: const Icon(Icons.save),
