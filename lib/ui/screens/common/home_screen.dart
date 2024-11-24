@@ -1,3 +1,4 @@
+import 'package:collectioneer/ui/screens/search-collectibles/search_collectibles_global_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:collectioneer/ui/screens/account/profile_screen.dart';
 import 'package:collectioneer/ui/screens/communities_list_screen.dart';
@@ -12,10 +13,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _tabs = const [
-    CommunityFeedScreen(),
-    CommunitiesListScreen(),
-    ProfileScreen(),
+  final List<Widget> _tabs = [
+    const CommunityFeedScreen(),
+    const CommunitiesListScreen(),
+    const ProfileScreen(),
+    const SearchCollectiblesGlobalScreen(),
+
   ];
 
   final List<BottomNavigationBarItem> _options =const [
@@ -33,6 +36,11 @@ class _HomeScreenState extends State<HomeScreen> {
   BottomNavigationBarItem(
     icon: Icon(Icons.person_outline, size: 30.0),
     activeIcon: Icon(Icons.person, size: 30.0),
+    label: '',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.search_outlined, size: 30.0),
+    activeIcon: Icon(Icons.search, size: 30.0),
     label: '',
   ),
   ];
