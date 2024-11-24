@@ -58,4 +58,26 @@ class CollectibleService extends BaseService {
       rethrow;
     }
   }
+  Future<List<Collectible>> fetchCollectibles(String searchTerm, {int? communityId, required int page, required int pageSize}) async {
+    final queryParameters = {
+      'SearchTerm': searchTerm,
+      'Page': page.toString(),
+      'PageSize': pageSize.toString(),
+    };
+
+    if (communityId != null) {
+      queryParameters['CommunityId'] = communityId.toString();
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/search/collectibles').replace(queryParameters: queryParameters),
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      return body.map((dynamic item) => Collectible.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load collectibles');
+    }
+  }
 }
